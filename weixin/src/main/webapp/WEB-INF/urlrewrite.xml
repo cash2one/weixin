@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite default-match-type="regex">
+
+    
+    <rule>
+        <note>登陆</note>
+        <from>^/login\.htm$</from>
+        <to type="forward">/member/login.htm</to>
+    </rule>
+
+    <rule>
+        <note>注册</note>
+        <from>^/register\.htm$</from>
+        <to type="forward">/member/register.htm</to>
+    </rule>
+	
+    <!-- 微信公众号 -->
+  <!--   <rule>
+        <note>微信文章详细页</note>
+        <from>^/weixin/detail-(.*)?\.htm$</from>
+        <to type="forward">/weixin/detail.htm?id=$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/detail\.htm\?id=(.*)</from>
+        <to last="true">/weixin/detail-$1.htm</to>
+    </outbound-rule> -->
+    <!-- 微信公众号 -->
+    <rule>
+        <note>微信文章详细页</note>
+        <from>^/weixin/detail-(.*)?\.htm$</from>
+        <to type="forward">/weixin/detail.htm?hash=$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/detail\.htm\?hash=(.*)</from>
+        <to last="true">/weixin/detail-$1.htm</to>
+    </outbound-rule>
+     <rule>
+        <note>单个微信账号文章列表页</note>
+        <from>^/weixin/one-(.*)?-(.*)?\.htm$</from>
+        <to type="forward">/weixin/one.htm?weixin_hao=$1&amp;pageNum=$2</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/one\.htm\?weixin_hao=(.*)&amp;pageNum=(.*)</from>
+        <to last="true">/weixin/one-$1-$2.htm</to>
+    </outbound-rule>
+   <!--  <rule>
+        <note>首页，标签文章列表页</note>
+        <from>^/weixin/list-(.*)?-(.*)?\.htm$</from>
+        <to type="forward">/weixin/list.htm?tagid=$1&amp;pageNum=$2</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/list\.htm\?tagid=(.*)&amp;pageNum=(.*)</from>
+        <to last="true">/weixin/list-$1-$2.htm</to>
+    </outbound-rule> -->
+    
+     <rule>
+        <note>首页，标签文章列表页</note>
+        <from>^/weixin/list-(.*)?-(.*)-(.*)?\.htm$</from>
+        <to type="forward">/weixin/list.htm?tagid=$1&amp;weixinHao=$2&amp;pageNum=$3</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/list\.htm\?tagid=(.*)&amp;weixinHao=(.*)&amp;pageNum=(.*)</from>
+        <to last="true">/weixin/list-$1-$2-$3.htm</to>
+    </outbound-rule>
+</urlrewrite>

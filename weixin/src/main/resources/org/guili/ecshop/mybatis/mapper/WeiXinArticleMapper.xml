@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.guili.ecshop.dao.weixin.IWeiXinArticleDao">
+ <!-- 要对应到所有属性 才能使用-->
+ <resultMap id="weiXinArticleMap" type="weiXinArticle">
+ 	<result property="id" column="id"/>
+ 	<result property="hao_id" column="hao_id"/>
+ 	<result property="hao_desc" column="hao_desc"/>
+ 	<result property="openid" column="openid"/>
+ 	<result property="tag_id" column="tag_id"/>
+	<result property="title" column="title"/>
+	<result property="titlehash" column="titlehash"/>
+	<result property="hao_name" column="hao_name"/>
+	<result property="description" column="description"/>
+	<result property="weixin_url" column="weixin_url"/>
+	<result property="read_times" column="read_times"/>
+	<result property="status" column="status"/>
+	<result property="createTime" column="createTime"/>
+	<result property="articleTime" column="articleTime"/>
+ </resultMap>
+ 
+ <!-- 这里namespace必须是UserMapper接口的路径，不然要运行的时候要报错 "is not known to the MapperRegistry" -->
+ <insert id="addweixinArticle" parameterType="weiXinArticle" useGeneratedKeys="true" keyProperty="id">
+	  <![CDATA[
+	  insert into t_ma_weixin_article
+	  				 (hao_id,hao_desc,openid,tag_id,title,titlehash,hao_name,description,weixin_url,read_times,status,createTime,articleTime)
+	  				 		
+	  values (#{hao_id},#{hao_desc},#{openid},#{tag_id},#{title},#{titlehash},#{hao_name},#{description},#{weixin_url},#{read_times},#{status},#{createTime},#{articleTime})
+	  ]]>
+ </insert>
+ 
+ <!-- 查询理财机构信息-->
+ <select id="selectWeiXinArticleById" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinArticle">
+   
+  	select * from t_ma_weixin_article 
+  	<where>
+  	<if test="id !=null">
+        id = #{id}  
+    </if>
+    </where>
+ </select>
+ 
+  <!-- 查询理财机构信息-->
+ <select id="selectWeiXinArticleByhash" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinArticle">
+   
+  	select * from t_ma_weixin_article 
+  	<where>
+  	<if test="titlehash !=null">
+        titlehash = #{titlehash}  
+    </if>
+    </where>
+ </select>
+ 
+   <!--微信号分页查询微信文章-->
+ <select id="selectPageArticleByHao" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinArticle">
+   
+  	select * from t_ma_weixin_article 
+  	<where>
+  	<if test="hao_id !=null">
+        hao_id = #{hao_id}  
+    </if>
+    order by id desc 
+    <if test="start !=null and pagesize!=null">
+    limit #{start} , #{pagesize}
+    </if>
+    </where>
+ </select>
+ 
+    <!--微信号分页查询微信文章-->
+ <select id="selectPageArticleByTag" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinArticle">
+   
+  	select * from t_ma_weixin_article 
+  	<where>
+  	<if test="tag_id !=null">
+        tag_id = #{tag_id}  
+    </if>
+    order by id desc 
+    <if test="start !=null and pagesize!=null">
+    limit #{start} , #{pagesize}
+    </if>
+    </where>
+ </select>
+ 
+</mapper>  

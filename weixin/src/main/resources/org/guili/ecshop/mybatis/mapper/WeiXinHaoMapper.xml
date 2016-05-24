@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.guili.ecshop.dao.weixin.IWeiXinDao">
+ <!-- 要对应到所有属性 才能使用-->
+ <resultMap id="weiXinHaoMap" type="weiXinHao">
+ 	<result property="id" column="id"/>
+ 	<result property="namehash" column="namehash"/>
+ 	<result property="name" column="name"/>
+	<result property="weixin_id" column="weixin_id"/>
+	<result property="openid" column="openid"/>
+	<result property="ma" column="ma"/>
+	<result property="touxiang" column="touxiang"/>
+	<result property="description" column="description"/>
+	<result property="renzheng" column="renzheng"/>
+	<result property="tag_id" column="tag_id"/>
+	<result property="status" column="status"/>
+	<result property="createTime" column="createTime"/>
+ </resultMap>
+ 
+ <!-- 这里namespace必须是UserMapper接口的路径，不然要运行的时候要报错 "is not known to the MapperRegistry" -->
+ <insert id="addweixin" parameterType="weiXinHao" useGeneratedKeys="true" keyProperty="id">
+	  <![CDATA[
+	  insert into t_ma_weixin_hao
+	  				 (name,namehash,weixin_id,openid,ma,touxiang,description,renzheng,tag_id,status,createTime)
+	  				 		
+	  values (#{name},#{namehash},#{weixin_id},#{openid},#{ma},#{touxiang},#{description},#{renzheng},#{tag_id},#{status},#{createTime})
+	  ]]>
+ </insert>
+ 
+ <update id="updateweixin"  parameterType="weiXinHao">
+   		update t_ma_weixin_hao set weixin_id=#{weixin_id},description=#{description},renzheng=#{renzheng},status=#{status} where id=#{id}
+ </update>
+ 
+  <update id="updateweixinStatus"  parameterType="weiXinHao">
+   		update t_ma_weixin_hao set status=#{status} where id=#{id}
+ </update>
+ 
+ <!-- 查询理财机构信息-->
+ <select id="selectWeiXinById" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinHao">
+   
+  	select * from t_ma_weixin_hao 
+  	<where>
+  	<if test="id !=null">
+        id = #{id}  
+    </if>
+    </where>
+ </select>
+ 
+  <!-- 查询最新微信账号信息-->
+ <select id="selectNewWeiXin" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinHao">
+   
+  	select * from t_ma_weixin_hao order by id desc limit 6
+ </select>
+ 
+  <!-- 查询理财机构信息-->
+ <select id="selectWeiXinByhash" parameterType="Map" resultType="org.guili.ecshop.business.weixin.bean.WeiXinHao">
+   
+  	select * from t_ma_weixin_hao 
+  	<where>
+  	<if test="namehash !=null">
+        namehash = #{namehash}  
+    </if>
+    </where>
+ </select>
+ 
+ <!-- 查询所有状态为未批量抓取的账号-->
+ <select id="selectAllWeiXinIds" parameterType="Map" resultType="String">
+  	select openid from t_ma_weixin_hao where status=1 order by id desc 
+ </select>
+ 
+</mapper>  

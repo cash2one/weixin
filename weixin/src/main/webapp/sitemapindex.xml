@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--sitemap组-->
+<sitemapindex>
+    <sitemap>
+		<loc>http://www.51maogou.com/sitemap/sitemap0.xml</loc>
+		<lastmod>2016-05-20</lastmod>
+    </sitemap>
+    <sitemap>
+		<loc>http://www.51maogou.com/sitemap/sitemap_detail.xml</loc>
+		<lastmod>2016-05-20</lastmod>
+    </sitemap>
+</sitemapindex>
