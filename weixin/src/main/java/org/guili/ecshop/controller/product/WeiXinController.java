@@ -15,6 +15,7 @@ import org.guili.ecshop.business.weixin.WeiXinSpiders;
 import org.guili.ecshop.business.weixin.WeixinSiteMapService;
 import org.guili.ecshop.business.weixin.bean.WeiXinArticle;
 import org.guili.ecshop.business.weixin.bean.WeiXinHao;
+import org.guili.ecshop.business.weixin.bean.WeixinListVo;
 import org.guili.ecshop.controller.common.BaseProfileController;
 import org.guili.ecshop.util.common.UrlHelper;
 import org.guili.ecshop.util.common.page.Pager;
@@ -132,29 +133,31 @@ public class WeiXinController extends BaseProfileController{
 		//微信列表页
 		@RequestMapping(value={ "/weixin/list.htm"},method={RequestMethod. GET})
 		public String list(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap
-						,Long tagid,String weixinHao,String pageNum) throws Exception{
+						,Long tagid,Long nextId,Long prevId) throws Exception{
 			
 			if(tagid==null){
 				tagid=1L;
 			}
 			//一页评论
-			int totalRow=TOTAL_NUM;
+//			int totalRow=TOTAL_NUM;
 			//分页信息
-	        Pager pager=null;
-	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
-	        if(StringUtils.isNotEmpty(pageNum)){
-	        	if(Integer.parseInt(pageNum)<1){
-	        		pageNum="1";	        	
-	        	}
-	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
-	        }else{
-	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
-	        }
-	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
-	        request.setAttribute("pager", pager);
+//	        Pager pager=null;
+//	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
+//	        if(StringUtils.isNotEmpty(pageNum)){
+//	        	if(Integer.parseInt(pageNum)<1){
+//	        		pageNum="1";	        	
+//	        	}
+//	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
+//	        }else{
+//	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
+//	        }
+//	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
+//	        request.setAttribute("pager", pager);
 	        
 //	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleByTag(tagid, pager.getStartRow(), ONE_PAGE);
-	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(tagid, weixinHao, pager.getStartRow(), ONE_PAGE);
+//	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid, weixinHao, pager.getCurrentPage());
+//	        WeixinListVo weixinListVo=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid, weixinHao,nextId, pager.getCurrentPage());
+			WeixinListVo weixinListVo=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid,nextId, prevId);
 	        //用于回显的url部分
 			String urlParam=this.setTagid(tagid);
 			
@@ -163,20 +166,19 @@ public class WeiXinController extends BaseProfileController{
 			List<WeiXinHao>  newWeiXinHaos = weiXinService.selectNewHaosInMongo(8);
 			request.setAttribute("newWeiXinHao", newWeiXinHaos);
 			
-			//热门id，
-//			List<WeiXinHao> reWeiXinHao=weiXinService.selectWeiXinByIds(WeixinConstans.re_ids);
-//			//推荐id，
-//			List<WeiXinHao> tuijianWeiXinHao=weiXinService.selectWeiXinByIds(WeixinConstans.tuijian_ids);
-//			//最新收录，
-//			List<WeiXinHao> newWeiXinHao=weiXinService.selectNewWeiXin();
-//			request.setAttribute("reWeiXinHao", reWeiXinHao);
-//			request.setAttribute("tuijianWeiXinHao", tuijianWeiXinHao);
-//			request.setAttribute("newWeiXinHao", newWeiXinHao);
 			//分页参数
 	        request.setAttribute("urlParam", urlParam);
 	        request.setAttribute("tagid", tagid);
 	        
-	        request.setAttribute("weiXinArticleList", weiXinArticleList);
+	        request.setAttribute("weiXinArticleList", weixinListVo.getWeiXinArticleList());
+	        //
+	        if(weixinListVo.getPreId()!=null){
+	        	request.setAttribute("preId", weixinListVo.getPreId());
+	        }
+	        //
+	        if(weixinListVo.getNextId()!=null){
+	        	request.setAttribute("nextId", weixinListVo.getNextId());
+	        }
 	        request.setAttribute("tagname", this.categoryName(tagid));
 			//测试页面
 			return "weixin/weixinlist";
@@ -205,6 +207,7 @@ public class WeiXinController extends BaseProfileController{
 	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
 	        request.setAttribute("pager", pager);
 	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(tagid, null, pager.getStartRow(), ONE_PAGE);
+//	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid, null, pager.getCurrentPage());
 	        //用于回显的url部分
 			String urlParam=this.setTagid(tagid);
 			
@@ -223,55 +226,46 @@ public class WeiXinController extends BaseProfileController{
 		
 		
 		//微信列表页
-		@RequestMapping(value={ "/weixin.htm"},method={RequestMethod. GET})
-		public String weixin(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap
-						  	,String pageNum,Long tagid) throws Exception{
-			
-			if(tagid==null){
-				tagid=1L;
-			}
-			//一页评论
-			int totalRow=TOTAL_NUM;
-			//分页信息
-	        Pager pager=null;
-	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
-	        if(StringUtils.isNotEmpty(pageNum)){
-	        	if(Integer.parseInt(pageNum)<1){
-	        		pageNum="1";	        	
-	        	}
-	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
-	        }else{
-	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
-	        }
-	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
-	        request.setAttribute("pager", pager);
-	        
-//	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleByTag(tagid, pager.getStartRow(), ONE_PAGE);
-	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(tagid, null, pager.getStartRow(), ONE_PAGE);
-	        //用于回显的url部分
-			String urlParam=this.setTagid(tagid);
-			
-			//最新微信号
-			List<WeiXinHao>  newWeiXinHaos = weiXinService.selectNewHaosInMongo(8);
-			request.setAttribute("newWeiXinHao", newWeiXinHaos);
-			//热门id，
-//			List<WeiXinHao> reWeiXinHao=weiXinService.selectWeiXinByIds(WeixinConstans.re_ids);
-//			//推荐id，
-//			List<WeiXinHao> tuijianWeiXinHao=weiXinService.selectWeiXinByIds(WeixinConstans.tuijian_ids);
-//			//最新收录，
-//			List<WeiXinHao> newWeiXinHao=weiXinService.selectNewWeiXin();
-//			request.setAttribute("reWeiXinHao", reWeiXinHao);
-//			request.setAttribute("tuijianWeiXinHao", tuijianWeiXinHao);
-//			request.setAttribute("newWeiXinHao", newWeiXinHao);
-			//分页参数
-	        request.setAttribute("urlParam", urlParam);
-	        request.setAttribute("tagid", tagid);
-	        
-	        request.setAttribute("weiXinArticleList", weiXinArticleList);
-	        request.setAttribute("tagname", this.categoryName(tagid));
-			//测试页面
-			return "weixin/weixinlist";
-		}
+//		@RequestMapping(value={ "/weixin.htm"},method={RequestMethod. GET})
+//		public String weixin(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap
+//						  	,String pageNum,Long tagid) throws Exception{
+//			
+//			if(tagid==null){
+//				tagid=1L;
+//			}
+//			//一页评论
+//			int totalRow=TOTAL_NUM;
+//			//分页信息
+//	        Pager pager=null;
+//	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
+//	        if(StringUtils.isNotEmpty(pageNum)){
+//	        	if(Integer.parseInt(pageNum)<1){
+//	        		pageNum="1";	        	
+//	        	}
+//	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
+//	        }else{
+//	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
+//	        }
+//	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
+//	        request.setAttribute("pager", pager);
+//	        
+////	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleByTag(tagid, pager.getStartRow(), ONE_PAGE);
+//	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(tagid, null, pager.getStartRow(), ONE_PAGE);
+//	        //用于回显的url部分
+//			String urlParam=this.setTagid(tagid);
+//			
+//			//最新微信号
+//			List<WeiXinHao>  newWeiXinHaos = weiXinService.selectNewHaosInMongo(8);
+//			request.setAttribute("newWeiXinHao", newWeiXinHaos);
+//			//分页参数
+//	        request.setAttribute("urlParam", urlParam);
+//	        request.setAttribute("tagid", tagid);
+//	        
+//	        request.setAttribute("weiXinArticleList", weiXinArticleList);
+//	        request.setAttribute("tagname", this.categoryName(tagid));
+//			//测试页面
+//			return "weixin/weixinlist";
+//		}
 		/**初始化参数
 		 */
 		private String setTagid(Long tagid){
@@ -306,7 +300,7 @@ public class WeiXinController extends BaseProfileController{
 	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
 	        request.setAttribute("pager", pager);
 //	        WeiXinHao weiXinHao= weiXinService.selectWeiXinById(haoid);
-	        WeiXinHao weiXinHao = weiXinService.selectHaoInMongoByHao(weixin_hao);
+//	        WeiXinHao weiXinHao = weiXinService.selectHaoInMongoByHao(weixin_hao);
 	      //用于回显的url部分
 			String urlParam=this.setparam(weixin_hao);
 			//分页参数

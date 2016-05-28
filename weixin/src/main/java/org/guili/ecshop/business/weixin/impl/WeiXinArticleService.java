@@ -9,10 +9,14 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.guili.ecshop.bean.common.DomainConstans;
+import org.guili.ecshop.business.guava.GuavaCacheService;
+import org.guili.ecshop.business.guava.GuavaCacheServiceImpl;
 import org.guili.ecshop.business.mongo.MongoService;
 import org.guili.ecshop.business.weixin.IWeiXinArticleService;
 import org.guili.ecshop.business.weixin.bean.WeiXinArticle;
+import org.guili.ecshop.business.weixin.bean.WeixinListVo;
 import org.guili.ecshop.dao.weixin.IWeiXinArticleDao;
 
 import com.alibaba.fastjson.JSON;
@@ -30,6 +34,8 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 	private IWeiXinArticleDao weiXinArticleDao;
 	
     private MongoService mongoService;
+    
+    private GuavaCacheService guavaCacheService;
     
 	private String articleCollection=DomainConstans.mongodb_article_collectionName;
 	
@@ -87,7 +93,6 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 //			 if(selectWeiXinArticleByhash(new Long(weiXinArticle.getTitlehash()))!=null){
 //				 continue;
 //			 }
-//			 System.out.println("add..."+weiXinArticle.getTitle());
 //			//添加微信文章
 //			 weiXinArticleDao.addweixinArticle(weiXinArticle);
 //		}
@@ -176,6 +181,11 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 	public void setMongoService(MongoService mongoService) {
 		this.mongoService = mongoService;
 	}
+	
+
+	public void setGuavaCacheService(GuavaCacheService guavaCacheService) {
+		this.guavaCacheService = guavaCacheService;
+	}
 
 	@Override
 	public List<WeiXinArticle> selectPageArticleInMongoByTag(Long tagid,String weixin_hao,
@@ -186,6 +196,7 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 		}
 		
 		List<Document> docs=mongoService.findArticle(null, weixin_hao, tagid, start, pagesize, articleCollection);
+		//查询所有_ids并缓存
 		if(docs==null || docs.isEmpty()){
 			return null;
 		}
@@ -203,6 +214,60 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 			weiXinArticleList.add(weiXinArticle);
 		}
 		return weiXinArticleList;
+	}
+	
+	@Override
+	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
+			Long nextKey,Long  prevKey) {
+		
+		if(tagid ==null){
+			return null;
+		}
+		
+//		List<Document> docs=mongoService.findArticle(null, weixin_hao, tagid, start, pagesize, articleCollection);
+		//查询所有_ids并缓存
+		List<String> onePageIds=Lists.newArrayList();
+		if(nextKey!=null){
+			onePageIds=guavaCacheService.getCallableCache(GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid,nextKey);
+		}else{
+			onePageIds=guavaCacheService.getCallablePreCache(GuavaCacheServiceImpl.CACHE_KEY_PREV_PRE+tagid,prevKey);
+		}
+		
+		//查询一页ids
+//		List<String> onePageIds =guavaCacheService.getOnePageIds(allIds, page);
+		//根据一页ids查询doc
+		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
+		if(docs==null || docs.isEmpty()){
+			return null;
+		}
+		
+		List<WeiXinArticle> weiXinArticleList=Lists.newArrayList();
+		
+		WeixinListVo weixinListVo=new WeixinListVo();
+		//组合数据
+		for(int i=0;i<docs.size();i++){
+			Document  doc=docs.get(i);
+			String jsonString = doc.toJson();
+			JSONObject jsonObject= JSON.parseObject(jsonString);
+			WeiXinArticle weiXinArticle = JSONObject.toJavaObject(jsonObject, WeiXinArticle.class);
+			//设置相对时间
+			weiXinArticle.setCreateTime(new  Date(jsonObject.getJSONObject("createTime").getLong("$numberLong")));
+			weiXinArticle.setRelativeTime();
+			weiXinArticleList.add(weiXinArticle);
+			
+			//设置前一页的结束
+			if(0==i && (nextKey!=null || prevKey!=null)){
+				weixinListVo.setPreId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));
+			}
+			
+			//设置后一页的起始id
+			if(i==docs.size()-1){
+				weixinListVo.setNextId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));
+			}
+		}
+		weixinListVo.setWeiXinArticleList(weiXinArticleList);
+		
+		return weixinListVo;
 	}
 
 	@Override

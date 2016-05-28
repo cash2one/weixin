@@ -85,66 +85,66 @@ font-weight: bold;
 			<div>
 			 	
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-1--1.htm"  style="color: #538dc2;font-weight: normal">
+				<a class="link_label" href="${_contextPath}/weixin/list-1--.htm"  style="color: #538dc2;font-weight: normal">
 				热门
 				</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-2--1.htm" style="color: #538dc2;font-weight: normal">推荐</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-2--.htm" style="color: #538dc2;font-weight: normal">推荐</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-8--1.htm" style="color: #538dc2;font-weight: normal">段子.笑话</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-8--.htm" style="color: #538dc2;font-weight: normal">段子.笑话</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-3--1.htm" style="color: #538dc2;font-weight: normal">健康.养生</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-3--.htm" style="color: #538dc2;font-weight: normal">健康.养生</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-4--1.htm" style="color: #538dc2;font-weight: normal">情感.心理</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-4--.htm" style="color: #538dc2;font-weight: normal">情感.心理</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-5--1.htm" style="color: #538dc2;font-weight: normal">电影.音乐</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-5--.htm" style="color: #538dc2;font-weight: normal">电影.音乐</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-6--1.htm" style="color: #538dc2;font-weight: normal">爱.生活</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-6--.htm" style="color: #538dc2;font-weight: normal">爱.生活</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-7--1.htm" style="color: #538dc2;font-weight: normal">理财.财经</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-7--.htm" style="color: #538dc2;font-weight: normal">理财.财经</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-9--1.htm" style="color: #538dc2;font-weight: normal">汽车.达人</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-9--.htm" style="color: #538dc2;font-weight: normal">汽车.达人</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-10--1.htm" style="color: #538dc2;font-weight: normal">IT.科技</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-10--.htm" style="color: #538dc2;font-weight: normal">IT.科技</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-14--1.htm" style="color: #538dc2;font-weight: normal">旅行.摄影</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-14--.htm" style="color: #538dc2;font-weight: normal">旅行.摄影</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-15--1.htm" style="color: #538dc2;font-weight: normal">职场.生活</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-15--.htm" style="color: #538dc2;font-weight: normal">职场.生活</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-16--1.htm" style="color: #538dc2;font-weight: normal">美食.菜谱</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-16--.htm" style="color: #538dc2;font-weight: normal">美食.菜谱</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-17--1.htm" style="color: #538dc2;font-weight: normal">历史.文学</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-17--.htm" style="color: #538dc2;font-weight: normal">历史.文学</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-18--1.htm"  style="color: #538dc2;font-weight: normal">人文.教育</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-18--.htm"  style="color: #538dc2;font-weight: normal">人文.教育</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-19--1.htm" style="color: #538dc2;font-weight: normal">恋爱.星座</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-19--.htm" style="color: #538dc2;font-weight: normal">恋爱.星座</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-20--1.htm" style="color: #538dc2;font-weight: normal">运动.体育</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-20--.htm" style="color: #538dc2;font-weight: normal">运动.体育</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-11--1.htm" style="color: #538dc2;font-weight: normal">服装.搭配.化妆</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-11--.htm" style="color: #538dc2;font-weight: normal">服装.搭配.化妆</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-12--1.htm" style="color: #538dc2;font-weight: normal">辣妈帮.育儿经</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-12--.htm" style="color: #538dc2;font-weight: normal">辣妈帮.育儿经</a>
 				</li>
 				<li class="tab #">
-				<a class="link_label" href="${_contextPath}/weixin/list-13--1.htm" style="color: #538dc2;font-weight: normal">杂说</a>
+				<a class="link_label" href="${_contextPath}/weixin/list-13--.htm" style="color: #538dc2;font-weight: normal">杂说</a>
 				</li>
 			</div>
 			</ul>
@@ -219,7 +219,21 @@ font-weight: bold;
 		</div>
 		</div>
 		</div>
-		<jsp:include page="/views/commons/weixin_page.jsp"></jsp:include>
+		<%-- <jsp:include page="/views/commons/weixin_page.jsp"></jsp:include> --%>
+		
+		<div class="pagination pagination-centered">
+	 	<ul style="padding-top: 2px;">
+			<li><a href="${_contextPath}/weixin/list-${tagid}--.htm">首页</a></li>
+			<%-- <c:if test="${preId!=null }">
+				<li><a href="${_contextPath}/weixin/list-${tagid}--1.htm?prevId=${preId}">上一页</a></li>
+			</c:if>
+			<li><a href="${_contextPath}/weixin/list-${tagid}--1.htm?nextId=${nextId}">下一页</a></li> --%>
+			<c:if test="${preId!=null }">
+				<li><a href="${_contextPath}/weixin/list-1--${preId}.htm">上一页</a></li>
+			</c:if>
+			<li><a href="${_contextPath}/weixin/list-1-${nextId}-.htm">下一页</a></li>
+		</ul>
+		</div>
 	</div>
 	<div class="side col w2_5 side_col">
 		<div>

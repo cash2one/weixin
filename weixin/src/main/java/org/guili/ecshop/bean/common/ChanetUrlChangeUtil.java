@@ -422,6 +422,5 @@ public class ChanetUrlChangeUtil {
     }
     //test ChanetUrl
     public static void main(String[] args) {
-    	System.out.println(ChanetUrlChangeUtil.getChanetUrl("http://www.orbis.com.cn/"));
 	}
 }

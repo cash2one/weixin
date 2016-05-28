@@ -86,7 +86,6 @@ public class UserDetailsInterceptor extends HandlerInterceptorAdapter implements
 		if(listMenu.contains(url)){
 			request.setAttribute("menu", "list");
 		}
-		System.out.println("url:"+url);
 		String tongjiMenu="/createtongji.htm,/tongjidetail.htm,/tongji.htm";
 		if(tongjiMenu.contains(url) && !url.equals("/")){
 			request.setAttribute("menu", "tongji");

@@ -283,16 +283,13 @@ public abstract class WeixinSpiderParent implements IWeiXinSpiderService<WeiXinH
 					String filename=name.hashCode()+".jpg";
 					this.makeImg(head_img, WeixinConstans.head_path,name.hashCode()+"", ".jpg");
 					
-					//复制到远程文件夹
-					FileTools.writeFileToRemote(WeixinConstans.remote_file_server_ip
-												, WeixinConstans.remote_file_server_username
-												, WeixinConstans.remote_file_server_pwd, filename, WeixinConstans.head_path, WeixinConstans.dest_file_path);
-					
+					//复制到nginx所在机器,当前nginx和tomcat在同一台
+//					FileTools.writeFileToRemote(WeixinConstans.remote_file_server_ip
+//												, WeixinConstans.remote_file_server_username
+//												, WeixinConstans.remote_file_server_pwd, filename, WeixinConstans.head_path, WeixinConstans.dest_file_path);
 				} catch (Exception e) {
 					logger.info("headimage is empty!");
 				}
-//				this.makeImg(ma_img, MA_IMAG_URL,name.hashCode()+"", ".jpg");
-				
 				WeiXinHao weiXinHao=new WeiXinHao();
 				weiXinHao.setCreateTime(new Date());
 				weiXinHao.setMa(ma);

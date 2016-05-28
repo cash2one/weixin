@@ -14,6 +14,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 	<bean id="mongoService" class=" org.guili.ecshop.business.mongo.MongoService">
 	</bean>
 	
+	<!-- cache service -->
+	<bean id="guavaCacheService" class=" org.guili.ecshop.business.guava.GuavaCacheServiceImpl">
+		<property name="mongoService" ref="mongoService"></property>
+	</bean>
+	
+	
 	<!-- 注册登录服务类 -->
 	<bean id="lcMemberService" class="org.guili.ecshop.business.impl.member.LcMemberService">
 		<property name="lcMemberDao" ref="lcMemberDao"></property>
@@ -26,6 +32,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 	<bean id="weiXinArticleService" class="org.guili.ecshop.business.weixin.impl.WeiXinArticleService">
 		<property name="weiXinArticleDao" ref="weiXinArticleDao"></property>
 		<property name="mongoService" ref="mongoService"></property>
+		<property name="guavaCacheService" ref="guavaCacheService"></property>
 	</bean>
 	<bean id="weiXinHaoSpider" class="org.guili.ecshop.business.weixin.WeiXinHaoSpider">
 		<property name="weiXinService" ref="weixinService"></property>
@@ -42,7 +49,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		<property name="weiXinService" ref="weixinService"></property>
 		<property name="weiXinArticleService" ref="weiXinArticleService"></property>
 	</bean>
-	
 	
 	
 </beans>

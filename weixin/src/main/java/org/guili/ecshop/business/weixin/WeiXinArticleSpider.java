@@ -92,7 +92,6 @@ public class WeiXinArticleSpider extends WeixinSpiderParent {
         DailiUtils dailiUtils=new DailiUtils();
         String ip_port=dailiUtils.getRandomIp();
         Map<String, String> randomcookie=dailiUtils.cookies;
-        System.out.println(ip_port);
         String ip=ip_port.split(":")[0];
     	String port=ip_port.split(":")[1];
 		//多url的情况
@@ -126,7 +125,6 @@ public class WeiXinArticleSpider extends WeixinSpiderParent {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-//        	 System.out.println("点击"+(i+1)+"下");
         }
         String pageXml=page.asXml();
 		return createWeixinArticle(pageXml,detailUrl);
@@ -382,7 +380,6 @@ public class WeiXinArticleSpider extends WeixinSpiderParent {
 //		String html="阅读&nbsp;129&nbsp;&nbsp;&nbsp;";
 //		String spanRegex = "阅读&nbsp;(.*?)&nbsp;";
 //		String[] results=spiderRegex.htmlregex(html, spanRegex, false);
-//		System.out.println(results[0]);
 		
 	}
 

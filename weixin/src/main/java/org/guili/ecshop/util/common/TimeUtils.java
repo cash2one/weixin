@@ -213,9 +213,6 @@ public class TimeUtils {
    public static void main(String[] args) {
 		Date now=new Date();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println(sdf.format(TimeUtils.AddDays(now, 1)));
-		System.out.println(sdf.format(TimeUtils.AddMonths(now, 1)));
-		System.out.println(sdf.format(TimeUtils.AddYears(now, 1)));
 		System.out.println(sdf.format(TimeUtils.AddTime(now, 1, 1, 1)));
 	}
 }

@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.guili.ecshop.bean.common.DomainConstans;
 import org.guili.ecshop.exception.SchedulerException;
 import org.guili.ecshop.util.MongoUtils;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.xerial.snappy.Snappy;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -43,6 +45,7 @@ public class MongoService {
 	private static final Logger	log	= LoggerFactory.getLogger(MongoService.class);
     private static final String USER_ID = "userId";
     private static final String BIND_TIME = "bindTime";
+    private static final int NEARLY_DAY=-10;
    
 
     private static final Cache<String, BlockingQueue<byte[]>> cacheQueue = CacheBuilder.newBuilder()
@@ -123,6 +126,7 @@ public class MongoService {
     }
     
     //文章字段
+    private static final String _ID = "_id";
     private static final String Article_ID = "id";
     private static final String Article_Tag_ID = "tag_id";
     private static final String Article_Titlehash = "titlehash";
@@ -184,6 +188,8 @@ public class MongoService {
         }else if (!StringUtils.isEmpty(weixin_hao)) {
        	 bson = and(eq(Article_Weixin_hao, weixin_hao ));
         }
+        
+        //加入需要查询的字段
         List<String> fieldNames=this.buildIncludeFieldNames();
         
         
@@ -259,6 +265,7 @@ public class MongoService {
     private  List<String> buildIncludeFieldNames(){
     	List<String> fieldNames=Lists.newArrayList();
     	fieldNames.add("id");
+    	fieldNames.add("_id");
     	fieldNames.add("title");
     	fieldNames.add("titlehash");
     	fieldNames.add("description");
@@ -367,4 +374,183 @@ public class MongoService {
             throw new SchedulerException(e.getCause());
         }
     }
+    
+    
+    /**
+     * 分页查询第一步
+     * 查询一个标签下所有_id，方便后续做分页,取最近1000条,返回_id list
+     * @param id
+     * @param titlehash
+     * @param hao_name_hash
+     * @param weixin_hao
+     * @param tag_id
+     * @param start
+     * @param size
+     * @param collectionName
+     * @return
+     */
+    public List<String> findOneTagArticle(String hao_name_hash,String weixin_hao,Long tag_id,Long startIndex, int size, String collectionName) {
+        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
+
+        final List<String> ids = Lists.newLinkedList();
+        Bson bson = null;
+
+        //创建时间范围,10天内的文章
+        Calendar now=Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, NEARLY_DAY);
+        Document doc=new Document();
+        //组合查询条件
+        if (tag_id != null){
+        	if(startIndex==null){
+        		doc=new Document("createTime", new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
+        	}else{
+        		doc=new Document("createTime", new Document("$lt",startIndex)).append(Article_Tag_ID, tag_id);
+        	}
+        }
+        
+        //sort desc
+        Bson sortBson = null;
+        sortBson=and(eq("createTime", -1 ));
+        //加入需要查询的字段
+        List<String> fieldNames=Lists.newArrayList();
+        fieldNames.add("_id");
+        
+        /**
+         * 条件查询mongodb
+         */
+        FindIterable<Document> iterable = MongoUtils.getCollection(collectionName).find(doc)
+        											.projection(Projections.include(fieldNames))
+        											.sort(sortBson).limit(size);
+        //构建返回结果
+        iterable.forEach(
+        new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                ObjectId objectId=document.getObjectId("_id");
+                ids.add(objectId.toHexString());
+            }
+        });
+
+        return ids;
+    }
+    
+    /**
+     * 分页查询第一步
+     * 查询一个标签下所有_id，方便后续做分页,取最近1000条,返回_id list
+     * @param id
+     * @param titlehash
+     * @param hao_name_hash
+     * @param weixin_hao
+     * @param tag_id
+     * @param start
+     * @param size
+     * @param collectionName
+     * @return
+     */
+    public List<String> findPrevPageArticle(String hao_name_hash,String weixin_hao,Long tag_id,Long prevIndex, int size, String collectionName) {
+        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
+
+        final List<String> ids = Lists.newLinkedList();
+
+        //创建时间范围,10天内的文章
+        Calendar now=Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, NEARLY_DAY);
+        Document doc=new Document();
+        //sort desc
+        Bson sortBson = null;
+        //组合查询条件
+        if (tag_id != null){
+        	if(prevIndex==null){
+        		doc=new Document("createTime", new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
+        		sortBson=and(eq("createTime", -1 ));
+        	}else{
+        		doc=new Document("createTime", new Document("$gt",prevIndex)).append(Article_Tag_ID, tag_id);
+        		sortBson=and(eq("createTime", 1 ));
+        	}
+        }
+        
+        //加入需要查询的字段
+        List<String> fieldNames=Lists.newArrayList();
+        fieldNames.add("_id");
+        
+        /**
+         * 条件查询mongodb
+         */
+        FindIterable<Document> iterable = MongoUtils.getCollection(collectionName).find(doc)
+        											.projection(Projections.include(fieldNames))
+        											.sort(sortBson).limit(size);
+        //构建返回结果
+        iterable.forEach(
+        new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                ObjectId objectId=document.getObjectId("_id");
+                ids.add(objectId.toHexString());
+            }
+        });
+
+        return ids;
+    }
+    
+    /**
+     * 分页查询第二步
+     * 查询一页数据 用  in子句
+     * @param id
+     * @param titlehash
+     * @param hao_name_hash
+     * @param weixin_hao
+     * @param tag_id
+     * @param start
+     * @param size
+     * @param collectionName
+     * @return
+     */
+    public List<Document> findOnePageArticle(List<String> ids, String collectionName) {
+        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
+
+        //防空
+        if(ids==null || ids.isEmpty()){
+        	return null;
+        }
+        
+        //拼接需要查询的ids
+        List<ObjectId> values=Lists.newLinkedList();
+        for(String _id:ids){
+        	values.add(new ObjectId(_id));
+        }
+        
+        final List<Document> docs = Lists.newLinkedList();
+        Bson bson = null;
+
+        bson = and(in(_ID, values));
+        
+        //sort desc
+        Bson sortBson = null;
+        sortBson=and(eq("createTime", -1 ));
+        
+        //加入需要查询的字段
+        List<String> fieldNames=this.buildIncludeFieldNames();
+        
+        /**
+         * 条件查询mongodb
+         */
+        FindIterable<Document> iterable = MongoUtils.getCollection(collectionName).find(bson)
+        											.projection(Projections.include(fieldNames)).sort(sortBson);
+        
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                docs.add(document);
+            }
+        });
+
+        return docs;
+    }
+    
+    public static void main(String[] args) {
+    	Calendar now=Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, -10);
+        System.out.println(now.getTimeInMillis());
+	}
+    
 }

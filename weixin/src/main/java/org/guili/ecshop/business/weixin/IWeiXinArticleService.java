@@ -2,6 +2,7 @@ package org.guili.ecshop.business.weixin;
 import java.util.Date;
 import java.util.List;
 import org.guili.ecshop.business.weixin.bean.WeiXinArticle;
+import org.guili.ecshop.business.weixin.bean.WeixinListVo;
 
 /**
  * 微信文章服务
@@ -85,5 +86,8 @@ public interface IWeiXinArticleService {
 	 */
 	public List<WeiXinArticle> selectNewArticleInMongoByTag(Date startTime,
 			int start, int pagesize);
+	
+	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
+			Long nextKey,Long  prevKey) ;
 	
 }

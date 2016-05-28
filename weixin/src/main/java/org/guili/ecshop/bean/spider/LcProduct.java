@@ -224,7 +224,6 @@ public class LcProduct {
 		try {
 //			lcProduct.setStartTime(sdf.parse("2014-06-15"));
 			lcProduct.setEndTime(sdf.parse("2014-08-25 00:00:00"));
-			System.out.println(lcProduct.getRemainTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

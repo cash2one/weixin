@@ -50,7 +50,6 @@ public class UrlHelper {
 
                 for (int i = 0; i < values.length; i++) {
                     if (values[i] != null) {
-//                        System.out.println(name + "=" + values[i]);
                         if(urlparams.length()==0){
                         	urlparams.append(name+"="+values[i]);
                         }else{
@@ -61,7 +60,6 @@ public class UrlHelper {
 
             }
         }
-        System.out.println(urlparams.toString());
         return urlparams.toString();
 	}
 	/**
@@ -93,7 +91,6 @@ public class UrlHelper {
 
                 for (int i = 0; i < values.length; i++) {
                     if (values[i] != null) {
-//                        System.out.println(name + "=" + values[i]);
                         if(urlparams.length()==0){
                         	urlparams.append(name+"="+values[i]);
                         }else{
@@ -104,7 +101,6 @@ public class UrlHelper {
 
             }
         }
-        System.out.println(urlparams.toString());
         return urlparams.toString();
 	}
 	
@@ -138,6 +134,5 @@ public class UrlHelper {
 	//test
 	public static void main(String[] args) {
 		String url="converse.com.cn/index.htm";
-		System.out.println(getMainUrl(url));
 	}
 }

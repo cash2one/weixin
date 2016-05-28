@@ -120,6 +120,5 @@ public class LcProductTongji {
 		this.presaleriskList = presaleriskList;
 	}
 	public static void main(String[] args) {
-		System.out.println("金钥匙·如意组合”2014年第58期看涨沪深300指数人民币理财产品”产品说明书".length());
 	}
 }

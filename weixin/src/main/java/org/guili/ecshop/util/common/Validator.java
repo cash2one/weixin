@@ -106,6 +106,5 @@ public final class Validator {
 	//test
 	public static void main(String[] args) {
 		String num="1212312.121";
-		System.out.println(Validator.isNumber(num));
 	}
 }

@@ -38,7 +38,6 @@ public class WeiXinSpiders  implements ApplicationContextAware{
 			   for(WeiXinSpiderType spiderType: spiderTypes){
 				   handlers.put(spiderType, handler);
 			   }
-			   System.out.println("init applicationContext..");
 		 }
 	}
 

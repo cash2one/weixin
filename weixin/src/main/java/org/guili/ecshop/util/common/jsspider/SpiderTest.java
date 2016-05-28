@@ -30,14 +30,9 @@ public class SpiderTest {
 	    
 	    final HtmlPage page = wc.getPage("http://htmlunit.sourceforge.net");
 	    //Assert.assertEquals("HtmlUnit - Welcome to HtmlUnit", page.getTitleText());
-	    System.out.println(page.getTitleText());
 	    final String pageAsXml = page.asXml();
-	    System.out.println(pageAsXml.contains("<body class=\"composite\">"));
 	    final String pageAsText = page.asText();
-//	    Assert.assertTrue(pageAsText.contains("Support for the HTTP and HTTPS protocols"));
-	    System.out.println(pageAsText.contains("Support for the HTTP and HTTPS protocols"));
 	    wc.closeAllWindows();
-	    System.out.println(new Date().getTime()-start.getTime());
 	}
 	
 	/**

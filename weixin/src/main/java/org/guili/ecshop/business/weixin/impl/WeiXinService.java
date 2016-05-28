@@ -88,10 +88,8 @@ public class WeiXinService implements IWeiXinService {
 //			}
 //			//防止重复插入。
 //			 if(selectWeiXinByhash(weixin.getWeiXinHao().getNamehash())!=null){
-//				 System.out.println("exists..."+weixin.getWeiXinHao().getName());
 //				 continue;
 //			 }else{
-//				 System.out.println("add..."+weixin.getWeiXinHao().getName());
 //				 weiXinDao.addweixin(weixin.getWeiXinHao());
 //			 }
 //		}
@@ -167,7 +165,6 @@ public class WeiXinService implements IWeiXinService {
 	@Override
 	public boolean selectHaoInMongoByHash(Long namehash) {
 		List<Document> docs=mongoService.findHao(null, namehash, null, null, 0, 1, weixinhaoCollection);
-		System.out.println("namehash:-----"+namehash);
 		if(docs==null || docs.isEmpty()){
 			return NOT_FIND;
 		}else{
