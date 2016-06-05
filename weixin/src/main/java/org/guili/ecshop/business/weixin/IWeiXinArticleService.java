@@ -87,7 +87,24 @@ public interface IWeiXinArticleService {
 	public List<WeiXinArticle> selectNewArticleInMongoByTag(Date startTime,
 			int start, int pagesize);
 	
+	/**
+	 * 分页查询标签下数据
+	 * @param tagid
+	 * @param nextKey
+	 * @param prevKey
+	 * @return
+	 */
 	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
 			Long nextKey,Long  prevKey) ;
+	
+	/**
+	 * 分页查询单个微信号
+	 * @param weixin_hao
+	 * @param nextKey
+	 * @param prevKey
+	 * @return
+	 */
+	public WeixinListVo selectOneHaoPageArticleInMongoByTag(String weixin_hao,
+			Long nextKey,Long  prevKey);
 	
 }

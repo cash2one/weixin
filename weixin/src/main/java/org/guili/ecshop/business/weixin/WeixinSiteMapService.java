@@ -29,7 +29,7 @@ public class WeixinSiteMapService {
 	private IWeiXinService weiXinService;
 	private IWeiXinArticleService weiXinArticleService;
 	
-	private static final String url = "http://data.zz.baidu.com/urls?site=www.51maogou.com&token=RdYcCBZRzcdB9wUO";//网站的服务器连接
+	private static final String url = "http://data.zz.baidu.com/urls?site=www.taochongwu.cn&token=WdqBssCdTV40UaXR";//网站的服务器连接
 	
 	private static final int COUNT=10;
 	private static final int ONE_PAGE=15;
@@ -48,7 +48,7 @@ public class WeixinSiteMapService {
 			if(weixinHao.getWeixin_id()==null || "".equals(weixinHao.getWeixin_id())){
 				continue;
 			}
-			param.add("http://www.51maogou.com/weixin/one-"+weixinHao.getWeixin_id()+"-1.htm");
+			param.add("http://www.taochongwu.cn/weixin/one-"+weixinHao.getWeixin_id()+"-1.htm");
 		}
 		
 		//2.微信文章
@@ -59,7 +59,7 @@ public class WeixinSiteMapService {
 			return;
 		}
 		for(WeiXinArticle weiXinArticle:weiXinArticles){
-			param.add("http://www.51maogou.com/weixin/detail-"+weiXinArticle.getTitlehash()+".htm");
+			param.add("http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm");
 		}
 		 
 		 String json = post(url, param);//执行推送方法  
@@ -76,15 +76,12 @@ public class WeixinSiteMapService {
     	Element urlsetElement = document.addElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
     	urlsetElement.addNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
     	urlsetElement.addAttribute("xsi:schemaLocation","http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
-    	XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/", XmlUtils.HOURLYFREQ);
+    	XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/", XmlUtils.HOURLYFREQ);
     	//页码信息
     	for(int i=1;i<20;i++){
-    		XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/weixin/list-"+i+"--1.htm", XmlUtils.HOURLYFREQ);
-    		for(int j=2;j<=20;j++){
-    			XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/weixin/list-"+i+"--"+j+".htm", XmlUtils.WEEKLYFREQ);
-    		}
+    		XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/list-"+i+"--1.htm", XmlUtils.HOURLYFREQ);
     	}
-    	XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/weixin/list-20--1.htm", XmlUtils.HOURLYFREQ);
+    	XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/list-20--1.htm", XmlUtils.HOURLYFREQ);
 	    //写入文件
 	    XmlUtils.generateXmlFile(document,filePath);
 	}
@@ -110,9 +107,9 @@ public class WeixinSiteMapService {
         		//拼链接
         		for(WeiXinArticle weiXinArticle:weiXinArticleList){
         			//微信号
-        			XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/weixin/one-"+weiXinArticle.getWeixin_hao()+"-1.htm", XmlUtils.WEEKLYFREQ);
+        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"-1.htm", XmlUtils.WEEKLYFREQ);
         			//微信文章
-        			XmlUtils.addOneElement(urlsetElement, "http://www.51maogou.com/weixin/detail-"+weiXinArticle.getTitlehash()+".htm", XmlUtils.WEEKLYFREQ);
+        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm", XmlUtils.WEEKLYFREQ);
         		}
         		System.out.println("第"+i+"个标签,第"+j+"页");
         		try {
@@ -207,11 +204,11 @@ public class WeixinSiteMapService {
      * @param args 
      */  
     public static void main(String[] args) {
-        String url = "http://data.zz.baidu.com/urls?site=www.51maogou.com&token=RdYcCBZRzcdB9wUO";//网站的服务器连接  
+        String url = "http://data.zz.baidu.com/urls?site=www.taochongwu.cn&token=WdqBssCdTV40UaXR";//网站的服务器连接  
         List<String> param =new ArrayList<String>();
-        param.add("http://www.51maogou.com/index.htm");
+        param.add("http://www.taochongwu.cn/index.htm");
 //        for(int i=1;i<=20;i++){
-        	String tempurl="http://www.51maogou.com/weixin/detail--358720547.htm";
+        	String tempurl="http://www.taochongwu.cn/weixin/detail--358720547.htm";
         	param.add(tempurl);
 //        }
         String json = post(url, param);//执行推送方法  

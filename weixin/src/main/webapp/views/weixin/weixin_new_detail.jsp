@@ -17,8 +17,8 @@
 <link rel="apple-touch-icon-precomposed" href="/static/img/ico/apple-touch-icon-iphone.png">
 <link type="image/x-icon" href="${pageContext.request.contextPath}/ico/maogou.ico" rel="shortcut icon">
 
-<title>${weiXinArticle.title }-- ${weiXinArticle.hao_name } -- 猫狗杂谭</title>
-<meta name="keywords" content="${weiXinArticle.title },${weiXinArticle.hao_name },猫狗杂谭" />
+<title>${weiXinArticle.title }-- ${weiXinArticle.hao_name } -- 聪悟网</title>
+<meta name="keywords" content="${weiXinArticle.title },${weiXinArticle.hao_name },聪悟网" />
 <meta name="description" content="${weiXinArticle.article_pre }" />
 
 <link rel="stylesheet" type="text/css" href="/static/css/article_improve.css"/>
@@ -38,8 +38,8 @@ min-height: 70px;">
 <div class="contents">
 <div class="row relative">
 <div class="logo " style="padding: 5px 10px 5px;font-size: 15px;left: -60px;margin-left: -70px;">
-	<a style="text-decoration: none;font-weight: bold;color: #333;height: 68px;" href="/index.htm" alt="猫狗杂谭">
-		<img src='${pageContext.request.contextPath}/img/weixin/maogou5.png' width="160px" height="65px" alt="猫狗杂谭">
+	<a style="text-decoration: none;font-weight: bold;color: #333;height: 68px;" href="/index.htm" alt="聪悟网">
+		<img src='${pageContext.request.contextPath}/img/weixin/chongwu02.png' width="160px" height="65px" alt="聪悟网">
 	</a>
 </div>
 <!-- <div>
@@ -204,7 +204,7 @@ data-ad-client="ca-pub-0996811467255783" data-ad-slot="2990020277"></ins>
 <li class="about"><a href="/app">App</a></li>
 <li class="about" style="float: right"><a href="https://www.upyun.com/index.html" target="_blank">又拍云</a></li> -->
 <!-- <li style="float: right"><span class="bullet"> • </span></li> -->
-<li class="about" style="float: right"><a href="http://www.51maogou.com/weixn/weixin.htm" target="_blank">热榜</a></li>
+<li class="about" style="float: right"><a href="http://www.taochongwu.cn/weixn/weixin.htm" target="_blank">热榜</a></li>
 
 </ul>
 </div>
@@ -231,7 +231,7 @@ s.parentNode.insertBefore(ga, s);
 <script language="javascript" src="http://upcdn.b0.upaiyun.com/libs/jquery/jquery-1.4.2.min.js"></script>
 <script language="javascript" src="/static/js/common.js"></script>
 <script>window._bd_share_config={"common":{"bdSnsKey":{"tsina":""},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},"share":[{"tag":"share_bottom","bdSize":16},{"tag":"share_right","bdSize":24,"bdStyle":"2"}]};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
-<script>
+<!-- <script>
 var _hmt = _hmt || [];
 (function() {
 var hm = document.createElement("script");
@@ -239,7 +239,7 @@ hm.src = "//hm.baidu.com/hm.js?9d416cb1bdca85038c8810fc14eeee57";
 var s = document.getElementsByTagName("script")[0];
 s.parentNode.insertBefore(hm, s);
 })();
-</script>
+</script> -->
 
 
 <script language="javascript" src="/static/js/reimg1.js"></script>

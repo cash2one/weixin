@@ -18,7 +18,7 @@ public class WeiXinHao implements Serializable{
 	private String 	description; 	//描述
 	private String 	renzheng; 		//认证信息
 	private Long 	tag_id; 		//标签id
-	private Integer status; 		//状态
+	private Integer status; 		//状态  
 	private Date 	createTime;
 	
 	public Long getId() {

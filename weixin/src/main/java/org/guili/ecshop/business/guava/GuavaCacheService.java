@@ -23,7 +23,29 @@ public interface GuavaCacheService {
 	 */
 	public List<String> getCallableCache(final String cacheKey,final Long nextIndex) ;
 	
+	/**
+	 * 标签列表上一页
+	 * @param cacheKey
+	 * @param prevIndex
+	 * @return
+	 */
 	public List<String> getCallablePreCache(final String cacheKey,final Long prevIndex) ;
+	
+	/**
+	 * 一个公众号下一页
+	 * @param cacheKey
+	 * @param startIndex
+	 * @return
+	 */
+	public List<String> getCallableOneHaoCache(final String cacheKey,final Long startIndex) ;
+	
+	/**
+	 * 查询上一页缓存
+	 * @param cacheKey
+	 * @param startIndex
+	 * @return
+	 */
+	public List<String> getCallableOneHaoPrevCache(final String cacheKey,final Long prevIndex) ;
 	
 
 }

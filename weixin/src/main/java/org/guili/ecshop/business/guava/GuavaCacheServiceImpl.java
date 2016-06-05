@@ -27,6 +27,8 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 	private MongoService mongoService;
 	public static final String CACHE_KEY_PRE="CACHE_KEY_PRE";
 	public static final String CACHE_KEY_PREV_PRE="CACHE_KEY_PREV_PRE";
+	public static final String CACHE_HAO_KEY_PRE="CACHE_HAO_KEY_PRE";
+	public static final String CACHE__HAO_KEY_PREV_PRE="CACHE__HAO_KEY_PREV_PRE";
 	private String articleCollection=DomainConstans.mongodb_article_collectionName;
 	private final int PAGE_SIZE=25;
 	
@@ -99,6 +101,76 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 						long tag_id=Long.parseLong(cacheKey.replace(CACHE_KEY_PREV_PRE, ""));
 //						List<String> cached = redisCacheService.get(RedisKeyPrefix.App, clientId, AppClient.class);
 						cached=mongoService.findPrevPageArticle(null, null, tag_id,prevIndex, PAGE_SIZE, articleCollection);
+						//从mongo取数据
+						logger.info("getCallableCacheXgetAppClient from cache by client_id,client_id={} ,use={}ms",
+								cacheKey, System.currentTimeMillis() - start);
+						return cached;
+					} catch (Exception e) {
+						logger.error("getCallableCacheXgetAppClientXerror happened when get app client from redis cache,client_id");
+						return null;
+					}
+				}
+			});
+			// 从缓存返回ids
+			return ids;
+		}catch (Exception e) {
+			// 异常抛错误码
+			logger.error("GuavaCacheServiceImplXgetCallableCacheXERROR happened when get app client from cache,client_id");
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> getCallableOneHaoCache(final String cacheKey,final Long startIndex) {
+
+		try {
+			// 从mongo取数据，Callable只有在缓存值不存在时，才会调用
+			List<String> ids = callableBuilder.get(cacheKey+startIndex, new Callable<List<String>>() {
+
+				// 如果本地缓存取不到，去redis取缓存
+				public  List<String> call() throws Exception {
+					try {
+						long start = System.currentTimeMillis();
+						List<String> cached= Lists.newArrayList();
+						//查询标签id
+						String weixin_hao=cacheKey.replace(CACHE_HAO_KEY_PRE, "");
+//						cached=mongoService.findOneTagArticle(null, null, tag_id,startIndex, PAGE_SIZE, articleCollection);
+						cached=mongoService.findOneHaoArticle(weixin_hao, startIndex, PAGE_SIZE, articleCollection);
+						//从mongo取数据
+						logger.info("getCallableCacheXgetAppClient from cache by client_id,client_id={} ,use={}ms",
+								cacheKey, System.currentTimeMillis() - start);
+						return cached;
+					} catch (Exception e) {
+						logger.error("getCallableCacheXgetAppClientXerror happened when get app client from redis cache,client_id");
+						return null;
+					}
+				}
+			});
+			// 从缓存返回ids
+			return ids;
+		}catch (Exception e) {
+			// 异常抛错误码
+			logger.error("GuavaCacheServiceImplXgetCallableCacheXERROR happened when get app client from cache,client_id");
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> getCallableOneHaoPrevCache(final String cacheKey,final Long prevIndex) {
+
+		try {
+			// 从mongo取数据，Callable只有在缓存值不存在时，才会调用
+			List<String> ids = callableBuilder.get(cacheKey+prevIndex, new Callable<List<String>>() {
+
+				// 如果本地缓存取不到，去redis取缓存
+				public  List<String> call() throws Exception {
+					try {
+						long start = System.currentTimeMillis();
+						List<String> cached= Lists.newArrayList();
+						//查询标签id
+						String weixin_hao=cacheKey.replace(CACHE__HAO_KEY_PREV_PRE, "");
+//						cached=mongoService.findOneTagArticle(null, null, tag_id,startIndex, PAGE_SIZE, articleCollection);
+						cached=mongoService.findOneHaoPrevArticle(weixin_hao, prevIndex, PAGE_SIZE, articleCollection);
 						//从mongo取数据
 						logger.info("getCallableCacheXgetAppClient from cache by client_id,client_id={} ,use={}ms",
 								cacheKey, System.currentTimeMillis() - start);

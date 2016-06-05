@@ -35,7 +35,6 @@
     			 <li class="active"><a href="javascript:void(0);">${page}</a></li>
     		</c:when>
     		<c:otherwise>
-    			<%-- <a href="http://weixin.licaime.com/${urlParam}${page}.htm">${page}</a> --%>
     			 <li><a href="${_contextPath}/${urlParam}${page}.htm">${page}</a></li>
     		</c:otherwise>
     	</c:choose>

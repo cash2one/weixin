@@ -73,7 +73,6 @@ $(function () {
 	     <li class="${menu eq 'list'?'cur':''}"><a href="${_contextPath}/index.htm">银行理财</a></li>
 	     <li class="${menu eq 'jigou'?'cur':''}"><a href="${_contextPath}/netlc/company.htm">理财机构</a></li>
 	     <li class="${menu eq 'wenda'?'cur':''}"><a href="${_contextPath}/wenda.htm">理财经验</a></li>
-	     <li ><a href="http://weixin.licaime.com/weixin/weixin.htm" alt="微精选">微精选</a></li>
 	     <%-- <li class="${menu eq 'tongji'?'cur':''}"><a href="${_contextPath}/tongji.htm">数据统计</a></li> --%>
 	     <li  class="${menu eq 'user'?'cur':''}"><a href="${_contextPath}/member/userinfo.htm">我的账户</a></li>
 	     <button class="zu-top-add-question" id="zu-top-add-question">提问</button>

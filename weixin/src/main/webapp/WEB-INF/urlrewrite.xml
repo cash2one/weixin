@@ -43,7 +43,8 @@
         <from>^/weixin/detail\.htm\?hash=(.*)</from>
         <to last="true">/weixin/detail-$1.htm</to>
     </outbound-rule>
-     <rule>
+    
+    <!-- <rule>
         <note>单个微信账号文章列表页</note>
         <from>^/weixin/one-(.*)?-(.*)?\.htm$</from>
         <to type="forward">/weixin/one.htm?weixin_hao=$1&amp;pageNum=$2</to>
@@ -51,7 +52,17 @@
     <outbound-rule>
         <from>^/weixin/one\.htm\?weixin_hao=(.*)&amp;pageNum=(.*)</from>
         <to last="true">/weixin/one-$1-$2.htm</to>
+    </outbound-rule> -->
+    <rule>
+        <note>单个微信账号文章列表页</note>
+        <from>^/weixin/one-(.*)?-(.*)-(.*)?\.htm$</from>
+        <to type="forward">/weixin/one.htm?weixin_hao=$1&amp;preId=$2&amp;nextId=$3</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/one\.htm\?weixin_hao=(.*)&amp;preId=(.*)&amp;nextId=(.*)</from>
+        <to last="true">/weixin/one-$1-$2-$3.htm</to>
     </outbound-rule>
+    
    <!--  <rule>
         <note>首页，标签文章列表页</note>
         <from>^/weixin/list-(.*)?-(.*)?\.htm$</from>

@@ -217,6 +217,58 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 	}
 	
 	@Override
+	public WeixinListVo selectOneHaoPageArticleInMongoByTag(String weixin_hao,
+			Long nextKey,Long  prevKey) {
+		
+		if(StringUtils.isEmpty(weixin_hao)){
+			return null;
+		}
+		
+		//查询所有_ids并缓存
+		List<String> onePageIds=Lists.newArrayList();
+		if(nextKey!=null){
+			onePageIds=guavaCacheService.getCallableOneHaoCache(GuavaCacheServiceImpl.CACHE_HAO_KEY_PRE+weixin_hao, nextKey);
+		}else{
+			onePageIds=guavaCacheService.getCallableOneHaoPrevCache(GuavaCacheServiceImpl.CACHE__HAO_KEY_PREV_PRE+weixin_hao,prevKey);
+		}
+		
+//				List<String> onePageIds =guavaCacheService.getOnePageIds(allIds, page);
+		//根据一页ids查询doc
+		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
+		if(docs==null || docs.isEmpty()){
+			return null;
+		}
+		
+		List<WeiXinArticle> weiXinArticleList=Lists.newArrayList();
+		
+		WeixinListVo weixinListVo=new WeixinListVo();
+		//组合数据
+		for(int i=0;i<docs.size();i++){
+			Document  doc=docs.get(i);
+			String jsonString = doc.toJson();
+			JSONObject jsonObject= JSON.parseObject(jsonString);
+			WeiXinArticle weiXinArticle = JSONObject.toJavaObject(jsonObject, WeiXinArticle.class);
+			//设置相对时间
+			weiXinArticle.setCreateTime(new  Date(jsonObject.getJSONObject("createTime").getLong("$numberLong")));
+			weiXinArticle.setRelativeTime();
+			weiXinArticleList.add(weiXinArticle);
+			
+			//设置前一页的结束
+			if(0==i && (nextKey!=null || prevKey!=null)){
+				weixinListVo.setPreId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));
+			}
+			
+			//设置后一页的起始id
+			if(i==docs.size()-1){
+				weixinListVo.setNextId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));
+			}
+		}
+		weixinListVo.setWeiXinArticleList(weiXinArticleList);
+		
+		return weixinListVo;
+	}
+	
+	@Override
 	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
 			Long nextKey,Long  prevKey) {
 		
@@ -254,12 +306,10 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 			weiXinArticle.setCreateTime(new  Date(jsonObject.getJSONObject("createTime").getLong("$numberLong")));
 			weiXinArticle.setRelativeTime();
 			weiXinArticleList.add(weiXinArticle);
-			
 			//设置前一页的结束
 			if(0==i && (nextKey!=null || prevKey!=null)){
 				weixinListVo.setPreId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));
 			}
-			
 			//设置后一页的起始id
 			if(i==docs.size()-1){
 				weixinListVo.setNextId(jsonObject.getJSONObject("createTime").getLong("$numberLong"));

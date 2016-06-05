@@ -8,9 +8,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link type="image/x-icon" href="${pageContext.request.contextPath}/ico/maogou.ico" rel="shortcut icon">
-		<title>${tagname}-最大的微信公众号推荐平台-猫狗杂谭</title>
-		<meta name="keywords" content="微信公众号 ,微信二维码,微信订阅号,微信公众账号,微信公众账号导航,公众账号导航,微信公众平台,猫狗杂谭-${tagname}频道" />
-		<meta name="description" content="猫狗杂谭是专业的微信公众号推荐平台，在这里您可以找到自己喜欢的公众账号。我们收录了国内主流的微信公众号信息，以及公众号相关文章。猫狗杂谭-www.51maogou.com" />
+		<title>${tagname}-最大的微信公众号推荐平台-聪悟网</title>
+		<meta name="keywords" content="微信公众号 ,微信二维码,微信订阅号,微信公众账号,微信公众账号导航,公众账号导航,微信公众平台,聪悟网-${tagname}频道" />
+		<meta name="description" content="聪悟网是专业的微信公众号推荐平台，在这里您可以找到自己喜欢的公众账号。我们收录了国内主流的微信公众号信息，以及公众号相关文章。聪悟网-www.taochongwu.cn" />
 		<!-- 公共setting配置 -->
 		<%@include file="/views/commons/config.jsp" %>
 		<!--Javascript-->
@@ -164,14 +164,14 @@ font-weight: bold;
 			<div class="e_col p1 w4_5">
 			<div class="feed_item_photo">
 			<div>
-			<a href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}-1.htm" target="_blank">
+			<a href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}--.htm" target="_blank">
 			<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weiXinArticle.hao_name_hash}.jpg" alt="${weiXinArticle.hao_name }" width="50"  height="50"/>
 			</a>
 			</div>
 			</div>
 			<strong class="feed_item_title">
 			<span class="light_gray normal">
-			<a class="topic_name" href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}-1.htm" target="_blank">
+			<a class="topic_name" href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}--.htm" target="_blank">
 			<span class="name_text">
 			<span>${weiXinArticle.hao_name}</span>
 			</span>
@@ -181,7 +181,7 @@ font-weight: bold;
 					${weiXinArticle.relativeTime}
 			</span>
 			.
-			<span class="timestamp"><a style="color: #999" href="#;" onclick="window.open('http://service.weibo.com/share/share.php?url=${_contextPath}/weixin/one-${weiXinArticle.hao_id}-1.htm&amp;title=【${weiXinArticle.title}(分享自@猫狗杂谭 www.51maogou.com)。&amp;appkey=4149632123&amp;', '_blank', 'width=550,height=370'); " class="tb">分享</a></span>
+			<span class="timestamp"><a style="color: #999" href="#;" onclick="window.open('http://service.weibo.com/share/share.php?url=${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}--.htm&amp;title=【${weiXinArticle.title}(分享自@聪悟网 www.taochongwu.cn)。&amp;appkey=&amp;', '_blank', 'width=550,height=370'); " class="tb">分享</a></span>
 			</span>
 			</strong>
 			<div class="home_feed_item_row">
@@ -229,9 +229,9 @@ font-weight: bold;
 			</c:if>
 			<li><a href="${_contextPath}/weixin/list-${tagid}--1.htm?nextId=${nextId}">下一页</a></li> --%>
 			<c:if test="${preId!=null }">
-				<li><a href="${_contextPath}/weixin/list-1--${preId}.htm">上一页</a></li>
+				<li><a href="${_contextPath}/weixin/list-${tagid}--${preId}.htm">上一页</a></li>
 			</c:if>
-			<li><a href="${_contextPath}/weixin/list-1-${nextId}-.htm">下一页</a></li>
+			<li><a href="${_contextPath}/weixin/list-${tagid}-${nextId}-.htm">下一页</a></li>
 		</ul>
 		</div>
 	</div>
@@ -248,12 +248,12 @@ font-weight: bold;
 						<strong>
 						<span class="meta_item_pic">
 						<div>
-						<a href="${_contextPath}/weixin/one-${weixinhao.weixin_id}-1.htm" title="${weixinhao.name}" target="_blank">
+						<a href="${_contextPath}/weixin/one-${weixinhao.weixin_id}--.htm" title="${weixinhao.name}" target="_blank">
 						<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weixinhao.namehash}.jpg" alt="${weixinhao.name}"  height="25" width="25">
 						</a>
 						</div>
 						</span>
-						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.weixin_id}-1.htm" title="${weixinhao.name}" target="_blank">
+						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.weixin_id}--.htm" title="${weixinhao.name}" target="_blank">
 						<span>${weixinhao.name}</span>
 						</a>
 						</strong>
@@ -269,7 +269,7 @@ font-weight: bold;
 			<div>
 				<div class="section">
 					<h3>推荐账号</h3>
-					<c:forEach var="weixinhao" items="${tuijianWeiXinHao}" varStatus="index">
+					<%-- <c:forEach var="weixinhao" items="${tuijianWeiXinHao}" varStatus="index">
 						<div class="simple_tabs">
 						<ul class="list_contents topic_trending_tabs">
 						<div>
@@ -277,12 +277,12 @@ font-weight: bold;
 						<strong>
 						<span class="meta_item_pic">
 						<div>
-						<a href="${_contextPath}/weixin/one-${weixinhao.id}-1.htm" title="${weixinhao.name}" target="_blank">
+						<a href="${_contextPath}/weixin/one-${weixinhao.id}--.htm" title="${weixinhao.name}" target="_blank">
 						<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weixinhao.hao_name_hash}.jpg" alt="${weixinhao.name}"  height="25" width="25">
 						</a>
 						</div>
 						</span>
-						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.id}-1.htm" title="${weixinhao.name}" target="_blank">
+						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.id}--.htm" title="${weixinhao.name}" target="_blank">
 						<span>${weixinhao.name}</span>
 						</a>
 						</strong>
@@ -290,7 +290,7 @@ font-weight: bold;
 						</div>
 						</ul>
 						</div>
-					</c:forEach>
+					</c:forEach> --%>
 				</div>
 			</div>
 		</div>

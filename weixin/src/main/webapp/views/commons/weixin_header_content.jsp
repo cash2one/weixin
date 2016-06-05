@@ -8,8 +8,8 @@ min-height: 70px;">
 <div class="contents">
 <div class="row relative">
 <div class="logo " style="padding: 5px 10px 5px;font-size: 15px;left: -60px;margin-left: -70px;">
-<a style="text-decoration: none;font-weight: bold;color: #333;height: 68px;" href="/index.htm" alt="猫狗杂谭">
-<img src='${pageContext.request.contextPath}/img/weixin/maogou5.png' width="160px" height="65px"></a>
+<a style="text-decoration: none;font-weight: bold;color: #333;height: 68px;" href="/index.htm" alt="聪悟网">
+<img src='${pageContext.request.contextPath}/img/weixin/chongwu02.png' width="160px" height="65px"></a>
 </div>
 <div>
 <div class=" search full_search instant_results">

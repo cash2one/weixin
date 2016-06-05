@@ -9,7 +9,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link type="image/x-icon" href="${pageContext.request.contextPath}/ico/maogou.ico" rel="shortcut icon">
-		<title>${weiXinHao.hao_name}--${weiXinHao.hao_name}微信公众号 -- 微精选</title>
+		<title>${weiXinHao.hao_name}--${weiXinHao.hao_name}微信公众号 -- 聪悟网</title>
 <meta name="keywords" content="${weiXinHao.hao_name},${weiXinHao.hao_name}-微信公众号 ,${weiXinHao.hao_name}微信,${weiXinHao.hao_name}微信二维码,${weiXinHao.hao_name}微信订阅号" />
 <meta name="description" content="${weiXinHao.description }-${weiXinHao.hao_name}" />
 		<!-- 公共setting配置 -->
@@ -101,7 +101,7 @@ cursor: default;
 <div class="row topic_name_editor">
 <div class=" inline_editor_content" id="__w2_kgil14i_inline_editor_content">
 <span class="inline_editor_value"><h1 class="inline"><span
-id="ld_XT398O_291"><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}-1.htm">${weiXinHao.hao_name }</a></span></h1></span></div>
+id="ld_XT398O_291"><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}--.htm">${weiXinHao.hao_name }</a></span></h1></span></div>
 </div>
 </div>
 </div>
@@ -160,7 +160,7 @@ id="ld_XT398O_291"><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}-1
 	&nbsp;&nbsp;&nbsp;
 	<span class="timestamp" style="color: #999"><fmt:formatDate value="${weiXinArticle.createTime}" pattern="yyyy年MM月dd日 "/></span>
 	&nbsp;&nbsp;&nbsp;
-	<span style="float: right;font-weight: normal"><a style="color: #999" href="#;" onclick="window.open('http://service.weibo.com/share/share.php?url=http://www.51maogou.com/weixin/one-${weixinhao.id}-1.htm&amp;title=【${weiXinArticle.title}(分享自@猫狗杂谭  www.51maogou.com)。&amp;appkey=4149632123&amp;', '_blank', 'width=550,height=370'); " class="tb">分享</a></span>
+	<span style="float: right;font-weight: normal"><a style="color: #999" href="#;" onclick="window.open('http://service.weibo.com/share/share.php?url=http://www.taochongwu.cn/weixin/one-${weixinhao.id}-1.htm&amp;title=【${weiXinArticle.title}(分享自@聪悟网  www.taochongwu.cn)。&amp;appkey=4149632123&amp;', '_blank', 'width=550,height=370'); " class="tb">分享</a></span>
 	</span>
 	</h2>
 	
@@ -184,7 +184,19 @@ id="ld_XT398O_291"><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}-1
 </c:if>
 
 </div>
-<jsp:include page="/views/commons/weixin_page.jsp"></jsp:include>
+<%-- <jsp:include page="/views/commons/weixin_page.jsp"></jsp:include> --%>
+<div class="pagination pagination-centered">
+	<ul style="padding-top: 2px;">
+		<li><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}--.htm">首页</a></li>
+		<c:if test="${preId!=null }">
+			<li><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}-${preId}-.htm">上一页</a></li>
+		</c:if>
+		<c:if test="${hasNext}">
+			<li><a href="${_contextPath}/weixin/one-${weiXinHao.weixin_hao}--${nextId}.htm">下一页</a></li>
+		</c:if>
+	</ul>
+</div>
+
 </div>
 
 </div>

@@ -158,6 +158,12 @@ public class WeiXinController extends BaseProfileController{
 //	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid, weixinHao, pager.getCurrentPage());
 //	        WeixinListVo weixinListVo=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid, weixinHao,nextId, pager.getCurrentPage());
 			WeixinListVo weixinListVo=weiXinArticleService.selectOnePageArticleInMongoByTag(tagid,nextId, prevId);
+			
+			 //如果返回数据为null指向404
+	        if(weixinListVo==null){
+	        	//测试页面
+				return "redirect:/errors/404.htm";
+	        }
 	        //用于回显的url部分
 			String urlParam=this.setTagid(tagid);
 			
@@ -285,35 +291,53 @@ public class WeiXinController extends BaseProfileController{
 		//微信列表页
 		@RequestMapping(value={ "/weixin/one.htm"},method={RequestMethod. GET})
 		public String one(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap
-						  	,String pageNum,String weixin_hao) throws Exception{
+						  	,String weixin_hao,Long preId,Long nextId) throws Exception{
 			
 			//一页评论
 			int totalRow=TOTAL_NUM;
 			//分页信息
-	        Pager pager=null;
-	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
-	        if(StringUtils.isNotEmpty(pageNum)){
-	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
-	        }else{
-	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
+//	        Pager pager=null;
+//	        String basePath=UrlHelper.getRealPath(request); 			  //基础绝对路径
+//	        if(StringUtils.isNotEmpty(pageNum)){
+//	        	pager = PagerHelper.getPager(pageNum, totalRow,ONE_PAGE); //初始化分页对象  
+//	        }else{
+//	        	pager = PagerHelper.getPager("1", totalRow,ONE_PAGE); 	  //初始化分页对象  
+//	        }
+//	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
+//	        request.setAttribute("pager", pager);
+////	        WeiXinHao weiXinHao= weiXinService.selectWeiXinById(haoid);
+////	        WeiXinHao weiXinHao = weiXinService.selectHaoInMongoByHao(weixin_hao);
+//	      //用于回显的url部分
+//			String urlParam=this.setparam(weixin_hao);
+//			//分页参数
+//	        request.setAttribute("urlParam", urlParam);
+	        
+//	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(null, weixin_hao, pager.getStartRow(), ONE_PAGE);
+	        WeixinListVo weixinListVo=weiXinArticleService.selectOneHaoPageArticleInMongoByTag(weixin_hao, nextId, preId);
+	        
+	        //如果返回数据为null指向404
+	        if(weixinListVo==null){
+	        	//测试页面
+				return "redirect:/errors/404.htm";
 	        }
-	        pager.setLinkUrl(basePath+request.getRequestURI()); 		  //设置跳转路径  
-	        request.setAttribute("pager", pager);
-//	        WeiXinHao weiXinHao= weiXinService.selectWeiXinById(haoid);
-//	        WeiXinHao weiXinHao = weiXinService.selectHaoInMongoByHao(weixin_hao);
-	      //用于回显的url部分
-			String urlParam=this.setparam(weixin_hao);
-			//分页参数
-	        request.setAttribute("urlParam", urlParam);
-	        
-	        List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag(null, weixin_hao, pager.getStartRow(), ONE_PAGE);
-	        request.setAttribute("weiXinArticleList", weiXinArticleList);
-	        
 	        //查询一个账号信息
-	        if(weiXinArticleList!=null && weiXinArticleList.size()>0){
-	        	request.setAttribute("weiXinHao", weiXinArticleList.get(0));	
+	        if(weixinListVo!=null && weixinListVo.getWeiXinArticleList()!=null && weixinListVo.getWeiXinArticleList().size()>0){
+	        	request.setAttribute("weiXinHao", weixinListVo.getWeiXinArticleList().get(0));	
+	        }
+	        //
+	        if(weixinListVo.getPreId()!=null){
+	        	request.setAttribute("preId", weixinListVo.getPreId());
+	        }
+	        //
+	        if(weixinListVo.getNextId()!=null){
+	        	request.setAttribute("nextId", weixinListVo.getNextId());
+	        }
+	        //判断是否还有下一页
+	        if(weixinListVo.getWeiXinArticleList().size()==ONE_PAGE){
+	        	request.setAttribute("hasNext", true);
 	        }
 	        
+	        request.setAttribute("weiXinArticleList", weixinListVo.getWeiXinArticleList());
 			//测试页面
 			return "weixin/weixinone";
 		}

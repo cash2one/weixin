@@ -14,10 +14,10 @@
 		<jsp:include page="/views/commons/licai_header_content_new.jsp"></jsp:include> 
 		<div style="width: 1100px; margin: 50px auto 0px;padding-bottom: 50px;">
 		        <div class="section">
-		        <p class="helpp1" style=" font-size: 15px;font-weight: bold;">自助理财-理财么网（licaime.com）</p>
+		        <p class="helpp1" style=" font-size: 15px;font-weight: bold;">微信精选-聪悟网（taochongwu.cn）</p>
 		        <br></br>
 		        <p  class="helpp">该功能正在维护中。。。。。。</p>
-				<p  class="helpp1"> 若有任何问题，请通过以下途径联系我们：（<a href="http://www.licaime.com" target="_blank">www.licaime.com</a>）,</p>
+				<p  class="helpp1"> 若有任何问题，请通过以下途径联系我们：（<a href="http://www.taochongwu.cn" target="_blank">www.taochongwu.cn</a>）,</p>
 				<p  class="helpp">我们为您提供实时、可靠、全面的理财产品查询和信息比较服务。</p>
 				<p  class="helpp">友情链接：licaime@163.com</p>
 				<p class="helpp">其他事宜：licaime@163.com</p>

@@ -9,7 +9,7 @@ $(function(){
 			  var datasrc=$(this).attr("data-src");
 			  var src=$(this).attr("src");
 			  //防止误换
-			  if(typeof(datasrc)=="undefined" && typeof(datasrc)!="undefined" && src.indexOf('51maogou.com') == -1){
+			  if(typeof(datasrc)=="undefined" && typeof(datasrc)!="undefined" && src.indexOf('taochongwu.cn') == -1){
 				  $(this).attr("data-src",src);
 			  }
 			  //换图片
@@ -28,7 +28,7 @@ $(function(){
 			  var datasrc=$(this).attr("data-src");
 			  var src=$(this).attr("src");
 			  //防止误换
-			  if(typeof(datasrc)=="undefined" && typeof(datasrc)!="undefined" && src.indexOf('51maogou.com') == -1){
+			  if(typeof(datasrc)=="undefined" && typeof(datasrc)!="undefined" && src.indexOf('taochongwu.cn') == -1){
 				  $(this).attr("data-src",src);
 			  }
 			  //换图片

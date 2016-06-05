@@ -217,12 +217,11 @@ public void createWeixins(String pagexml,String url){
 
 	public static void main(String[] args) {
 		DailiSpider weiXinHaoSpider=new DailiSpider();
-		for(int i=1;i<=3;i++){
-			String detailUrl="http://www.xicidaili.com/nn/"+i;
-			weiXinHaoSpider.weixinDetailHttpMore(detailUrl);
-		}
+//		for(int i=1;i<=4;i++){
+//			String detailUrl="http://www.xicidaili.com/nn/"+i;
+//			weiXinHaoSpider.weixinDetailHttpMore(detailUrl);
+//		}
 		weiXinHaoSpider.validateips();
-		
 //		weiXinHaoSpider.removeMoreips();
 //		weiXinHaoSpider.createWeixins("", detailUrl);
 //		weiXinHaoSpider.getUrlTest("61.135.217.14", 80);
