@@ -25,7 +25,7 @@ public class WeiXinArticle implements Serializable{
 	private String description;		//文章描述
 	private String article_pre;		//文章预览
 	private Integer read_times;		//阅读次数
-	private Integer status;			//状态   //2，优质
+	private Integer status;			//状态   1.正常 2，优质
 	private Date createTime; 		//创建时间
 	private String relativeTime; 		//文章相对时间
 	private String content;			//文章内容

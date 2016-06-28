@@ -38,17 +38,17 @@ public class TestController extends BaseProfileController {
     
 	private String collectionName=DomainConstans.mongodb_logininfo_collectionName;
 
-    @RequestMapping(value = "/find.htm", method = RequestMethod.POST)
-    @ResponseBody
-    public void find(Long userId, Date startTime, Date endTime, Integer start, Integer size, String collectionName) {
-        Preconditions.checkNotNull(userId, "userId is required");
-
-        int startVal = start != null ? start.intValue() : PAGE_START;
-        int sizeVal = size != null ? size.intValue() : PAGE_SIZE;
-        List<Document> documents=mongoService.find(userId.longValue(), startTime, endTime, startVal, sizeVal, collectionName);
-
-        return ;
-    }
+//    @RequestMapping(value = "/find.htm", method = RequestMethod.POST)
+//    @ResponseBody
+//    public void find(Long userId, Date startTime, Date endTime, Integer start, Integer size, String collectionName) {
+//        Preconditions.checkNotNull(userId, "userId is required");
+//
+//        int startVal = start != null ? start.intValue() : PAGE_START;
+//        int sizeVal = size != null ? size.intValue() : PAGE_SIZE;
+//        List<Document> documents=mongoService.find(userId.longValue(), startTime, endTime, startVal, sizeVal, collectionName);
+//
+//        return ;
+//    }
     
     @RequestMapping(value = "/testAdd.htm", method = RequestMethod.POST)
     @ResponseBody

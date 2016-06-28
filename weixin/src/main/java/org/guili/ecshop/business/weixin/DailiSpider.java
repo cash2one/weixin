@@ -63,25 +63,32 @@ public class DailiSpider {
 	public void weixinDetailHttpMore(String detailUrl){
 		String pagexml="";
 		//如果要求httpclient处理
-		HttpComponent httpComponent=new HttpComponent();
+//		HttpComponent httpComponent=new HttpComponent();
+		try {
+		HttpComponent httpComponent=new HttpComponent(300, 100, 3000, 3000, true);
 		//设置代理服务器
 		HttpGet httpGet = new HttpGet(detailUrl);
 		//设置user-Agent
 		httpGet.addHeader("User-Agent", USER_AGENT);
 		httpGet.addHeader("Content-Type", "text/html;charset=UTF-8"); 
-		try {
+		
 			 pagexml=httpComponent.execute(httpGet, pageHandler);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//容错
 		if(StringUtils.isEmpty(pagexml)){
 			return ;
 		}
-		
-//		FileTools.write("E:/weixinspider/daili_list.txt", pagexml);
 //		return null;
-		this.createWeixins(pagexml, detailUrl);
+		if(detailUrl.contains("www.xicidaili.com")){
+//			FileTools.write("E:/weixinspider/daili_list.txt", pagexml);
+			this.createWeixins(pagexml, detailUrl);
+		}else{
+//			FileTools.write("E:/weixinspider/daili_list_kuaidaili.txt", pagexml);
+			this.createWeixins_KuaiDaili(pagexml, detailUrl);
+		}
+		
 	}
 	
 	
@@ -112,7 +119,34 @@ public void createWeixins(String pagexml,String url){
 		}
 	}
 
-	
+	public void createWeixins_KuaiDaili(String pagexml,String url){
+		
+	//	try {
+	//		pagexml=FileTools.read("E:/weixinspider/daili_list.txt");
+	//	} catch (IOException e) {
+	//		e.printStackTrace();
+	//	}
+		
+		if(pagexml.equals("")){
+			return ;
+		}
+		Document doc = Jsoup.parse(pagexml);
+		Elements nodes=doc.select("tbody").select("tr");
+		//找到ip port 写文件
+		for(int i=0;i<nodes.size();i++){
+			if(0==i){
+				continue;
+			}
+			Element node=nodes.get(i);
+			String ip =node.select("td").get(0).html();
+			String port =node.select("td").get(1).html();
+			System.out.println("ip:"+ip+":port:"+port);
+	//		FileTools.write("E:/weixinspider/daili_ips.txt", ip+":"+port);
+			FileTools.appendToFile(SOURCE_PROXY_IPS, ip+":"+port+";");
+		}
+	}	
+
+
 	//处理响应handler
 	public final PageHandler pageHandler = new PageHandler();
 	private class PageHandler extends AbstractResponseHandler<String> {
@@ -217,8 +251,12 @@ public void createWeixins(String pagexml,String url){
 
 	public static void main(String[] args) {
 		DailiSpider weiXinHaoSpider=new DailiSpider();
-//		for(int i=1;i<=4;i++){
+//		for(int i=1;i<=5;i++){
 //			String detailUrl="http://www.xicidaili.com/nn/"+i;
+//			weiXinHaoSpider.weixinDetailHttpMore(detailUrl);
+//		}
+//		for(int i=31;i<=100;i++){
+//			String detailUrl="http://www.kuaidaili.com/free/inha/"+i;
 //			weiXinHaoSpider.weixinDetailHttpMore(detailUrl);
 //		}
 		weiXinHaoSpider.validateips();

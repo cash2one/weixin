@@ -21,7 +21,7 @@ public interface GuavaCacheService {
 	/**
 	 * 功能描述：获取缓存的key，Callable只有在缓存值不存在时，调用
 	 */
-	public List<String> getCallableCache(final String cacheKey,final Long nextIndex) ;
+	public List<String> getCallableCache(final String cacheKey,final Long startIndex,final Integer status,Integer size);
 	
 	/**
 	 * 标签列表上一页

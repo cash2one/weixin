@@ -16,6 +16,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.guili.ecshop.bean.common.DomainConstans;
+import org.guili.ecshop.business.weixin.bean.ArticleType;
 import org.guili.ecshop.exception.SchedulerException;
 import org.guili.ecshop.util.MongoUtils;
 import org.slf4j.Logger;
@@ -43,9 +44,18 @@ import static com.mongodb.client.model.Filters.*;
 public class MongoService {
 
 	private static final Logger	log	= LoggerFactory.getLogger(MongoService.class);
-    private static final String USER_ID = "userId";
-    private static final String BIND_TIME = "bindTime";
-    private static final int NEARLY_DAY=-10;
+    private static final int NEARLY_DAY=-30;
+    
+    //文章字段
+    private static final String _ID = "_id";
+    private static final String Article_ID = "id";
+    private static final String Article_Tag_ID = "tag_id";
+    private static final String Article_Status = "status";
+    private static final String Article_Titlehash = "titlehash";
+    private static final String Article_Hao_name_hash = "hao_name_hash";
+    private static final String Article_Weixin_hao = "weixin_hao";
+    private static final String CREATE_TIME="createTime";
+    private static final String Article_READ_TIMES = "read_times";
    
 
     private static final Cache<String, BlockingQueue<byte[]>> cacheQueue = CacheBuilder.newBuilder()
@@ -93,45 +103,7 @@ public class MongoService {
         }
     }
 
-    public List<Document> find(long userId, Date startTime, Date endTime, int start, int size, String collectionName) {
-        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
-
-        final List<Document> docs = Lists.newLinkedList();
-        Bson bson = null;
-
-        if (startTime != null && endTime != null) {
-            if (endTime.before(startTime)) {
-                throw new SchedulerException(
-                        String.format("endTime is before startTime. startTime: %s, endTime: %s", startTime, endTime));
-            }
-
-            bson = and(eq(USER_ID, userId), gte(BIND_TIME, startTime), lte(BIND_TIME, endTime));
-        } else if (startTime != null) {
-            bson = and(eq(USER_ID, userId), gte(BIND_TIME, startTime));
-        } else if (endTime != null) {
-            bson = and(eq(USER_ID, userId), lte(BIND_TIME, endTime));
-        } else {
-            bson = and(eq(USER_ID, userId));
-        }
-
-        FindIterable<Document> iterable = MongoUtils.getCollection(collectionName).find(bson).projection(Projections.exclude("_id")).limit(size).skip(start);
-        iterable.forEach(new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                docs.add(document);
-            }
-        });
-
-        return docs;
-    }
-    
-    //文章字段
-    private static final String _ID = "_id";
-    private static final String Article_ID = "id";
-    private static final String Article_Tag_ID = "tag_id";
-    private static final String Article_Titlehash = "titlehash";
-    private static final String Article_Hao_name_hash = "hao_name_hash";
-    private static final String Article_Weixin_hao = "weixin_hao";
+  
     
     public List<Document> findArticle(Long id,Integer titlehash,String hao_name_hash,String weixin_hao,Long tag_id,int start, int size, String collectionName) {
         Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
@@ -195,8 +167,7 @@ public class MongoService {
         
         //sort desc
         Bson sortBson = null;
-//        {"createTime":-1}
-        sortBson=and(eq("createTime", -1 ));
+        sortBson=and(eq(CREATE_TIME, -1 ));
         /**
          * 条件查询mongodb
          */
@@ -238,8 +209,8 @@ public class MongoService {
         
         //sort desc
         Bson sortBson = null;
-//        {"createTime":-1}
-        sortBson=and(eq("createTime", -1 ));
+//        {CREATE_TIME:-1}
+        sortBson=and(eq(CREATE_TIME, -1 ));
         /**
          * 条件查询mongodb
          */
@@ -272,8 +243,8 @@ public class MongoService {
     	fieldNames.add("hao_name");
     	fieldNames.add("hao_name_hash");
     	fieldNames.add("hao_desc");
-    	fieldNames.add("weixin_hao");
-    	fieldNames.add("createTime");
+    	fieldNames.add(Article_Weixin_hao);
+    	fieldNames.add(CREATE_TIME);
     	fieldNames.add("article_pre");
     	fieldNames.add("read_times");
     	return fieldNames;
@@ -345,7 +316,7 @@ public class MongoService {
         
         //sort desc
         Bson sortBson = null;
-        sortBson=and(eq("createTime", -1 ));
+        sortBson=and(eq(CREATE_TIME, -1 ));
 
         FindIterable<Document> iterable = MongoUtils.getCollection(collectionName)
         											.find(bson)
@@ -389,7 +360,7 @@ public class MongoService {
      * @param collectionName
      * @return
      */
-    public List<String> findOneTagArticle(String hao_name_hash,String weixin_hao,Long tag_id,Long startIndex, int size, String collectionName) {
+    public List<String> findOneTagArticle(String hao_name_hash,String weixin_hao,Long tag_id,Long startIndex, int size, String collectionName,Integer status) {
         Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
 
         final List<String> ids = Lists.newLinkedList();
@@ -400,17 +371,32 @@ public class MongoService {
         now.add(Calendar.DAY_OF_YEAR, NEARLY_DAY);
         Document doc=new Document();
         //组合查询条件
-        if (tag_id != null){
+        if (tag_id != null && !ArticleType.ArticleType_SPECIAL.getValue().equals(status)){
         	if(startIndex==null){
-        		doc=new Document("createTime", new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
+        		doc=new Document(CREATE_TIME, new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
         	}else{
-        		doc=new Document("createTime", new Document("$lt",startIndex)).append(Article_Tag_ID, tag_id);
+        		doc=new Document(CREATE_TIME, new Document("$lt",startIndex)).append(Article_Tag_ID, tag_id);
         	}
+        }else if(tag_id == null && !ArticleType.ArticleType_SPECIAL.getValue().equals(status)){
+        	if(startIndex==null){
+        		doc=new Document(CREATE_TIME, new Document("$gt",now.getTimeInMillis()));
+        	}else{
+        		doc=new Document(CREATE_TIME, new Document("$lt",startIndex));
+        	}
+        }else{
+        	//如果有，加入条件查询,如果status==2是优质文章
+        	if(startIndex==null){
+        		doc=new Document(CREATE_TIME, new Document("$gt",now.getTimeInMillis()));
+        	}else{
+        		doc=new Document(CREATE_TIME, new Document("$lt",startIndex));
+        	}
+        	doc.append(Article_Status, status);
         }
+        
         
         //sort desc
         Bson sortBson = null;
-        sortBson=and(eq("createTime", -1 ));
+        sortBson=and(eq("_id", -1 ));
         //加入需要查询的字段
         List<String> fieldNames=Lists.newArrayList();
         fieldNames.add("_id");
@@ -461,11 +447,11 @@ public class MongoService {
         //组合查询条件
         if (tag_id != null){
         	if(prevIndex==null){
-        		doc=new Document("createTime", new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
-        		sortBson=and(eq("createTime", -1 ));
+        		doc=new Document(CREATE_TIME, new Document("$gt",now.getTimeInMillis())).append(Article_Tag_ID, tag_id);
+        		sortBson=and(eq(CREATE_TIME, -1 ));
         	}else{
-        		doc=new Document("createTime", new Document("$gt",prevIndex)).append(Article_Tag_ID, tag_id);
-        		sortBson=and(eq("createTime", 1 ));
+        		doc=new Document(CREATE_TIME, new Document("$gt",prevIndex)).append(Article_Tag_ID, tag_id);
+        		sortBson=and(eq(CREATE_TIME, 1 ));
         	}
         }
         
@@ -528,7 +514,7 @@ public class MongoService {
         
         //sort desc
         Bson sortBson = null;
-        sortBson=and(eq("createTime", -1 ));
+        sortBson=and(eq(CREATE_TIME, -1 ));
         
         //加入需要查询的字段
         List<String> fieldNames=this.buildIncludeFieldNames();
@@ -576,12 +562,12 @@ public class MongoService {
     	if(startIndex==null){
     		doc=new Document(Article_Weixin_hao, weixin_hao);
     	}else{
-    		doc=new Document("createTime", new Document("$lt",startIndex)).append(Article_Weixin_hao, weixin_hao);
+    		doc=new Document(CREATE_TIME, new Document("$lt",startIndex)).append(Article_Weixin_hao, weixin_hao);
     	}
         
     	  //sort desc
         Bson sortBson = null;
-        sortBson=and(eq("createTime", -1 ));
+        sortBson=and(eq(CREATE_TIME, -1 ));
         //加入需要查询的字段
         List<String> fieldNames=Lists.newArrayList();
         fieldNames.add("_id");
@@ -634,14 +620,14 @@ public class MongoService {
 //    	if(prevIndex==null){
 //    		doc=new Document(Article_Weixin_hao, weixin_hao);
 //    	}else{
-//    		doc=new Document("createTime", new Document("$lt",startIndex)).append(Article_Weixin_hao, weixin_hao);
+//    		doc=new Document(CREATE_TIME, new Document("$lt",startIndex)).append(Article_Weixin_hao, weixin_hao);
 //    	}
     	if(prevIndex==null){
     		doc=new Document(Article_Weixin_hao, weixin_hao);
-    		sortBson=and(eq("createTime", -1 ));
+    		sortBson=and(eq(CREATE_TIME, -1 ));
     	}else{
-    		doc=new Document("createTime", new Document("$gt",prevIndex)).append(Article_Weixin_hao, weixin_hao);
-    		sortBson=and(eq("createTime", 1 ));
+    		doc=new Document(CREATE_TIME, new Document("$gt",prevIndex)).append(Article_Weixin_hao, weixin_hao);
+    		sortBson=and(eq(CREATE_TIME, 1 ));
     	}
         
         //加入需要查询的字段
@@ -667,10 +653,93 @@ public class MongoService {
         return ids;
     }
     
+    /**
+     * update Article status
+     * @param id
+     * @param status
+     * @param collectionName
+     * @return
+     */
+    public void  updateOneArticle(Integer titlehash, String collectionName) {
+        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
+
+        //防空
+        if(titlehash==null){
+        	return ;
+        }
+        Document doc=new Document();
+        //更新条件
+    	doc=new Document(Article_Titlehash, titlehash);
+    	
+        //需要更新字段
+    	Document update=new Document();
+    	update=new Document("$set", new Document("status", 2));
+        
+        /**
+         * 条件查询mongodb
+         */
+         MongoUtils.getCollection(collectionName).updateOne(doc, update);
+
+        return;
+    }
+    
+    /**
+     * 分页查询第一步
+     * 查询一个标签下所有_id，方便后续做分页,取最近1000条,返回_id list
+     * @param startIndex
+     * @param size
+     * @param collectionName
+     * @return
+     */
+    public List<String> findGoodArticle(Long startIndex, int size, String collectionName) {
+        Preconditions.checkArgument(MongoUtils.checkCollName(collectionName), "collection name not exist in mongo");
+
+        final List<String> ids = Lists.newLinkedList();
+        Bson bson = null;
+
+        //创建时间范围,10天内的文章
+        Calendar now=Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, NEARLY_DAY);
+        Document doc=new Document();
+        //组合查询条件
+        if(startIndex==null){
+    		doc=new Document(CREATE_TIME, new Document("$gt",now.getTimeInMillis()));
+    	}else{
+    		doc=new Document(CREATE_TIME, new Document("$lt",startIndex));
+    	}
+    	doc.append(Article_READ_TIMES,  new Document("$gt",50000));
+        
+        //sort desc
+        Bson sortBson = null;
+        sortBson=and(eq("_id", -1 ));
+        //加入需要查询的字段
+        List<String> fieldNames=Lists.newArrayList();
+        fieldNames.add("_id");
+        
+        /**
+         * 条件查询mongodb
+         */
+        FindIterable<Document> iterable = MongoUtils.getCollection(collectionName).find(doc)
+        											.projection(Projections.include(fieldNames))
+        											.sort(sortBson).limit(size);
+        //构建返回结果
+        iterable.forEach(
+        new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                ObjectId objectId=document.getObjectId("_id");
+                ids.add(objectId.toHexString());
+            }
+        });
+        return ids;
+    }
+    
     public static void main(String[] args) {
     	Calendar now=Calendar.getInstance();
         now.add(Calendar.DAY_OF_YEAR, -10);
         System.out.println(now.getTimeInMillis());
 	}
+    
+   
     
 }

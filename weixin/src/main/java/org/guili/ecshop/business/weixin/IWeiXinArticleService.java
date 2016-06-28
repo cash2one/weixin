@@ -95,7 +95,7 @@ public interface IWeiXinArticleService {
 	 * @return
 	 */
 	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
-			Long nextKey,Long  prevKey) ;
+			Long nextKey,Long  prevKey,Integer status) ;
 	
 	/**
 	 * 分页查询单个微信号
@@ -107,4 +107,27 @@ public interface IWeiXinArticleService {
 	public WeixinListVo selectOneHaoPageArticleInMongoByTag(String weixin_hao,
 			Long nextKey,Long  prevKey);
 	
+	
+	/**
+	 * 更新文章 status
+	 * @param titlehash
+	 */
+	 public void  updateOneArticle(Integer titlehash);
+	 
+	 public WeixinListVo selectOnePageArticleByHot(Long tagid,
+				Long nextKey,Long  prevKey,Integer status);
+	 
+	 
+	 public WeixinListVo getNearlyArticles(Long tagid,
+				Long nextKey,Long  prevKey,Integer status,Integer count);
+	 
+	 /**
+	  * 查询优质文章
+	  * @param tagid
+	  * @param nextKey
+	  * @param prevKey
+	  * @param status
+	  * @return
+	  */
+	 public WeixinListVo getGoodArticles(Long nextKey,Integer status);
 }

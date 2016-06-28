@@ -17,7 +17,7 @@ min-height: 70px;">
 </div>
 </div>
 </div>
-<div style="float: right;"><a href='/weixin/list-2--1.htm' target="_blank" style="color: #666;padding: 0 8px;">优质微信公众账号</a></div>
+<div style="float: right;"><a href='/weixin/hot.htm' target="_blank" style="color: #666;padding: 0 8px;">优质微信公众账号</a></div>
 </div>
 </div>
 </div>

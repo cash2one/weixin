@@ -16,6 +16,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.guili.ecshop.business.weixin.bean.WeiXinArticle;
 import org.guili.ecshop.business.weixin.bean.WeiXinHao;
+import org.guili.ecshop.business.weixin.bean.WeixinListVo;
 import org.guili.ecshop.util.common.XmlUtils;
 
 /**
@@ -40,26 +41,35 @@ public class WeixinSiteMapService {
 		
 		//带推送数据
 		List<String> param =new ArrayList<String>();
-		List<WeiXinHao> weixinHaos=weiXinService.selectNewHaosInMongo(COUNT);
-		if(weixinHaos==null || weixinHaos.isEmpty()){
-			return ;
-		}
-		for(WeiXinHao weixinHao:weixinHaos){
-			if(weixinHao.getWeixin_id()==null || "".equals(weixinHao.getWeixin_id())){
-				continue;
-			}
-			param.add("http://www.taochongwu.cn/weixin/one-"+weixinHao.getWeixin_id()+"-1.htm");
-		}
+//		List<WeiXinHao> weixinHaos=weiXinService.selectNewHaosInMongo(COUNT);
+//		if(weixinHaos==null || weixinHaos.isEmpty()){
+//			return ;
+//		}
+//		for(WeiXinHao weixinHao:weixinHaos){
+//			if(weixinHao.getWeixin_id()==null || "".equals(weixinHao.getWeixin_id())){
+//				continue;
+//			}
+//			param.add("http://www.taochongwu.cn/weixin/one-"+weixinHao.getWeixin_id()+"-1.htm");
+//		}
+//		
+//		//2.微信文章
+//		//前一小时的文章
+//		Date preOneHour=new Date(System.currentTimeMillis()-3600000);
+//		List<WeiXinArticle>  weiXinArticles = weiXinArticleService.selectNewArticleInMongoByTag(preOneHour, 0, COUNT);
+//		if(weiXinArticles==null || weiXinArticles.size()==0){
+//			return;
+//		}
+//		for(WeiXinArticle weiXinArticle:weiXinArticles){
+//			param.add("http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm");
+//		}
 		
-		//2.微信文章
-		//前一小时的文章
-		Date preOneHour=new Date(System.currentTimeMillis()-3600000);
-		List<WeiXinArticle>  weiXinArticles = weiXinArticleService.selectNewArticleInMongoByTag(preOneHour, 0, COUNT);
-		if(weiXinArticles==null || weiXinArticles.size()==0){
+		WeixinListVo nearlyWeixinList=weiXinArticleService.getNearlyArticles(null, null, null, null, COUNT);
+		if(nearlyWeixinList==null || nearlyWeixinList.getWeiXinArticleList()==null ||nearlyWeixinList.getWeiXinArticleList().size()==0){
 			return;
 		}
-		for(WeiXinArticle weiXinArticle:weiXinArticles){
+		for(WeiXinArticle weiXinArticle:nearlyWeixinList.getWeiXinArticleList()){
 			param.add("http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm");
+			param.add("http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"--.htm");
 		}
 		 
 		 String json = post(url, param);//执行推送方法  
@@ -86,6 +96,7 @@ public class WeixinSiteMapService {
 	    XmlUtils.generateXmlFile(document,filePath);
 	}
 	
+	private static  Long nextKey=null;
 	/**
 	 * 每天生成一个微信号和微信文章文件
 	 * @param filePath
@@ -96,10 +107,34 @@ public class WeixinSiteMapService {
     	urlsetElement.addNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
     	urlsetElement.addAttribute("xsi:schemaLocation","http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
     	//页码信息
-    	for(int i=1;i<=20;i++){
     		//循环取文章
-    		for(int j=1;j<pagenum;j++){
-    			List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag((long)i, null, (j-1)*ONE_PAGE, ONE_PAGE);
+//    		for(int j=1;j<pagenum;j++){
+//    			List<WeiXinArticle> weiXinArticleList=weiXinArticleService.selectPageArticleInMongoByTag((long)i, null, (j-1)*ONE_PAGE, ONE_PAGE);
+//        		//微信公众号
+//        		if(weiXinArticleList==null || weiXinArticleList.isEmpty()){
+//        			continue;
+//        		}
+//        		//拼链接
+//        		for(WeiXinArticle weiXinArticle:weiXinArticleList){
+//        			//微信号
+//        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"-1.htm", XmlUtils.WEEKLYFREQ);
+//        			//微信文章
+//        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm", XmlUtils.WEEKLYFREQ);
+//        		}
+//        		System.out.println("第"+i+"个标签,第"+j+"页");
+//        		try {
+//					Thread.currentThread().sleep(500);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//    		}
+    	//分页查询数据
+    		for(int i=0;i<2192;i++){
+    			WeixinListVo weixinListVo=weiXinArticleService.selectOnePageArticleInMongoByTag(null,nextKey, null,null);
+    			//设置下一页的值
+    			nextKey=weixinListVo.getNextId();
+    			List<WeiXinArticle> weiXinArticleList = weixinListVo.getWeiXinArticleList();
+    			
         		//微信公众号
         		if(weiXinArticleList==null || weiXinArticleList.isEmpty()){
         			continue;
@@ -107,18 +142,19 @@ public class WeixinSiteMapService {
         		//拼链接
         		for(WeiXinArticle weiXinArticle:weiXinArticleList){
         			//微信号
-        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"-1.htm", XmlUtils.WEEKLYFREQ);
+//        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"-1.htm", XmlUtils.WEEKLYFREQ);
+        			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/one-"+weiXinArticle.getWeixin_hao()+"--.htm", XmlUtils.WEEKLYFREQ);
         			//微信文章
         			XmlUtils.addOneElement(urlsetElement, "http://www.taochongwu.cn/weixin/detail-"+weiXinArticle.getTitlehash()+".htm", XmlUtils.WEEKLYFREQ);
         		}
-        		System.out.println("第"+i+"个标签,第"+j+"页");
+        		System.out.println("第"+i+"页");
         		try {
-					Thread.currentThread().sleep(500);
+					Thread.currentThread().sleep(200);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
     		}
-    	}
+    		
 	    //写入文件
 	    XmlUtils.generateXmlFile(document,filePath);
 	}

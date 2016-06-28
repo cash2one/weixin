@@ -39,6 +39,8 @@ public class WeiXinArticleService implements IWeiXinArticleService {
     
 	private String articleCollection=DomainConstans.mongodb_article_collectionName;
 	
+	private final int PAGE_SIZE=25;
+	
 	@Override
 	public int addweixinArticle(WeiXinArticle weiXinArticle) {
 		if(weiXinArticle.getTitlehash() !=null && weiXinArticle.getTitlehash()>=0){
@@ -233,6 +235,11 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 		}
 		
 //				List<String> onePageIds =guavaCacheService.getOnePageIds(allIds, page);
+		
+		//防止空数据
+		if(onePageIds==null || onePageIds.isEmpty()){
+			return null;
+		}
 		//根据一页ids查询doc
 		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
 		if(docs==null || docs.isEmpty()){
@@ -270,19 +277,35 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 	
 	@Override
 	public WeixinListVo selectOnePageArticleInMongoByTag(Long tagid,
-			Long nextKey,Long  prevKey) {
+			Long nextKey,Long  prevKey,Integer status) {
 		
 		if(tagid ==null){
-			return null;
+			tagid=0L;;
 		}
 		
 //		List<Document> docs=mongoService.findArticle(null, weixin_hao, tagid, start, pagesize, articleCollection);
 		//查询所有_ids并缓存
 		List<String> onePageIds=Lists.newArrayList();
-		if(nextKey!=null){
-			onePageIds=guavaCacheService.getCallableCache(GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid,nextKey);
+		
+		//如果是普通查询
+		if(status==null){
+			if(nextKey!=null && prevKey==null){
+				String cache_key=GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid;
+				onePageIds=guavaCacheService.getCallableCache(cache_key,nextKey,null,PAGE_SIZE);
+			}else if(nextKey==null && prevKey!=null){
+				onePageIds=guavaCacheService.getCallablePreCache(GuavaCacheServiceImpl.CACHE_KEY_PREV_PRE+tagid,prevKey);
+			}else{
+				String cache_key=GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid;
+				onePageIds=guavaCacheService.getCallableCache(cache_key,nextKey,null,PAGE_SIZE);
+			}
 		}else{
-			onePageIds=guavaCacheService.getCallablePreCache(GuavaCacheServiceImpl.CACHE_KEY_PREV_PRE+tagid,prevKey);
+			//如果是优质文章查询
+			onePageIds=guavaCacheService.getCallableCache(GuavaCacheServiceImpl.CACHE_SPECIAL_KEY_PRE+tagid,nextKey,status,PAGE_SIZE);
+		}
+		
+		//防止空数据
+		if(onePageIds==null || onePageIds.isEmpty()){
+			return null;
 		}
 		
 		//查询一页ids
@@ -293,8 +316,21 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 			return null;
 		}
 		
-		List<WeiXinArticle> weiXinArticleList=Lists.newArrayList();
+		WeixinListVo weixinListVo = this.createReturnObject(docs, nextKey, prevKey);
+		return weixinListVo;
+	}
+	
+	
+	/**
+	 * 构建返回数据
+	 * @param docs
+	 * @param nextKey
+	 * @param prevKey
+	 * @return
+	 */
+	private WeixinListVo createReturnObject(List<Document> docs,Long nextKey,Long  prevKey){
 		
+		List<WeiXinArticle> weiXinArticleList=Lists.newArrayList();
 		WeixinListVo weixinListVo=new WeixinListVo();
 		//组合数据
 		for(int i=0;i<docs.size();i++){
@@ -316,7 +352,6 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 			}
 		}
 		weixinListVo.setWeiXinArticleList(weiXinArticleList);
-		
 		return weixinListVo;
 	}
 
@@ -341,6 +376,111 @@ public class WeiXinArticleService implements IWeiXinArticleService {
 			weiXinArticleList.add(weiXinArticle);
 		}
 		return weiXinArticleList;
+	}
+
+	@Override
+	public void updateOneArticle(Integer titlehash) {
+		mongoService.updateOneArticle(titlehash, articleCollection);
+	}
+
+	@Override
+	public WeixinListVo selectOnePageArticleByHot(Long tagid, Long nextKey,
+			Long prevKey, Integer status) {
+		if(tagid ==null){
+			tagid=0L;;
+		}
+		
+//		List<Document> docs=mongoService.findArticle(null, weixin_hao, tagid, start, pagesize, articleCollection);
+		//查询所有_ids并缓存
+		List<String> onePageIds=Lists.newArrayList();
+		
+		//如果是普通查询
+		if(status==null){
+			if(nextKey!=null && prevKey==null){
+				String cache_key=GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid;
+				onePageIds=guavaCacheService.getCallableCache(cache_key,nextKey,null,PAGE_SIZE);
+			}else if(nextKey==null && prevKey!=null){
+				onePageIds=guavaCacheService.getCallablePreCache(GuavaCacheServiceImpl.CACHE_KEY_PREV_PRE+tagid,prevKey);
+			}else{
+				String cache_key=GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid;
+				onePageIds=guavaCacheService.getCallableCache(cache_key,nextKey,null,PAGE_SIZE);
+			}
+		}else{
+			//如果是优质文章查询
+			onePageIds=guavaCacheService.getCallableCache(GuavaCacheServiceImpl.CACHE_SPECIAL_KEY_PRE+tagid,nextKey,status,PAGE_SIZE);
+		}
+		
+		//防止空数据
+		if(onePageIds==null || onePageIds.isEmpty()){
+			return null;
+		}
+		
+		//查询一页ids
+//		List<String> onePageIds =guavaCacheService.getOnePageIds(allIds, page);
+		//根据一页ids查询doc
+		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
+		if(docs==null || docs.isEmpty()){
+			return null;
+		}
+		
+		WeixinListVo weixinListVo = this.createReturnObject(docs, nextKey, prevKey);
+		return weixinListVo;
+	}
+
+	@Override
+	public WeixinListVo getNearlyArticles(Long tagid, Long nextKey,
+			Long prevKey, Integer status, Integer count) {
+		if(tagid ==null){
+			tagid=0L;;
+		}
+		
+		//查询所有_ids并缓存
+		List<String> onePageIds=Lists.newArrayList();
+		
+		//如果是普通查询
+		String cache_key=GuavaCacheServiceImpl.CACHE_KEY_PRE+tagid;
+		onePageIds=guavaCacheService.getCallableCache(cache_key,nextKey,null,count);
+		
+		//防止空数据
+		if(onePageIds==null || onePageIds.isEmpty()){
+			return null;
+		}
+		
+		//根据一页ids查询doc
+		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
+		if(docs==null || docs.isEmpty()){
+			return null;
+		}
+		
+		WeixinListVo weixinListVo = this.createReturnObject(docs, nextKey, prevKey);
+		return weixinListVo;
+	}
+
+	@Override
+	public WeixinListVo getGoodArticles(Long nextKey, Integer status) {
+		
+//		List<Document> docs=mongoService.findArticle(null, weixin_hao, tagid, start, pagesize, articleCollection);
+		//查询所有_ids并缓存
+		List<String> onePageIds=Lists.newArrayList();
+		
+		//如果是普通查询
+		onePageIds=mongoService.findGoodArticle(nextKey, 25, articleCollection);
+		
+		//防止空数据
+		if(onePageIds==null || onePageIds.isEmpty()){
+			return null;
+		}
+		
+		//查询一页ids
+//		List<String> onePageIds =guavaCacheService.getOnePageIds(allIds, page);
+		//根据一页ids查询doc
+		List<Document> docs = mongoService.findOnePageArticle(onePageIds, articleCollection);
+		if(docs==null || docs.isEmpty()){
+			return null;
+		}
+		
+		WeixinListVo weixinListVo = this.createReturnObject(docs, nextKey, null);
+		return weixinListVo;
 	}
 	
 	

@@ -240,7 +240,7 @@ font-weight: bold;
 			<div>
 				<div class="section">
 					<h3>最新收录</h3>
-					<c:forEach var="weixinhao" items="${newWeiXinHao}" varStatus="index">
+					<c:forEach var="weiXinArticle" items="${newWeiXinHao}" varStatus="index">
 						<div class="simple_tabs">
 						<ul class="list_contents topic_trending_tabs">
 						<div>
@@ -248,13 +248,13 @@ font-weight: bold;
 						<strong>
 						<span class="meta_item_pic">
 						<div>
-						<a href="${_contextPath}/weixin/one-${weixinhao.weixin_id}--.htm" title="${weixinhao.name}" target="_blank">
-						<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weixinhao.namehash}.jpg" alt="${weixinhao.name}"  height="25" width="25">
+						<a href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}--.htm" title="${weiXinArticle.hao_name}" target="_blank">
+						<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weiXinArticle.hao_name_hash}.jpg" alt="${weiXinArticle.hao_name}"  height="25" width="25">
 						</a>
 						</div>
 						</span>
-						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.weixin_id}--.htm" title="${weixinhao.name}" target="_blank">
-						<span>${weixinhao.name}</span>
+						<a class="link" href="${_contextPath}/weixin/one-${weiXinArticle.weixin_hao}--.htm" title="${weiXinArticle.hao_name}" target="_blank">
+						<span>${weiXinArticle.hao_name}</span>
 						</a>
 						</strong>
 						</li>
@@ -269,60 +269,9 @@ font-weight: bold;
 			<div>
 				<div class="section">
 					<h3>推荐账号</h3>
-					<%-- <c:forEach var="weixinhao" items="${tuijianWeiXinHao}" varStatus="index">
-						<div class="simple_tabs">
-						<ul class="list_contents topic_trending_tabs">
-						<div>
-						<li class="tab linked_list_item">
-						<strong>
-						<span class="meta_item_pic">
-						<div>
-						<a href="${_contextPath}/weixin/one-${weixinhao.id}--.htm" title="${weixinhao.name}" target="_blank">
-						<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weixinhao.hao_name_hash}.jpg" alt="${weixinhao.name}"  height="25" width="25">
-						</a>
-						</div>
-						</span>
-						<a class="link" href="${_contextPath}/weixin/one-${weixinhao.id}--.htm" title="${weixinhao.name}" target="_blank">
-						<span>${weixinhao.name}</span>
-						</a>
-						</strong>
-						</li>
-						</div>
-						</ul>
-						</div>
-					</c:forEach> --%>
 				</div>
 			</div>
 		</div>
-		<%-- <div>
-			<div>
-				<div class="section"><h3>热门账号</h3>
-				<c:forEach var="weixinhao" items="${reWeiXinHao}" varStatus="index">
-					<div class="simple_tabs">
-					<ul class="list_contents topic_trending_tabs">
-					<div>
-					<li class="tab linked_list_item">
-					<strong>
-					<span class="meta_item_pic">
-					<div>
-					<a href="${_contextPath}/weixin/one-${weixinhao.id}-1.htm" title="${weixinhao.name}" target="_blank">
-					<img class="profile_photo_img" src="${_contextPath}/weixin/head/${weixinhao.touxiang}.jpg" alt="${weixinhao.name}"  height="25" width="25">
-					</a>
-					</div>
-					</span>
-					<a class="link" href="${_contextPath}/weixin/one-${weixinhao.id}-1.htm" title="${weixinhao.name}" target="_blank">
-					<span>${weixinhao.name}</span>
-					</a>
-					</strong>
-					</li>
-					</div>
-					</ul>
-					</div>
-				</c:forEach>
-				</div>
-			</div>
-		</div> --%>
-	
 		<div>
 			<div>
 				<div class="section"><h3>赞助商</h3>

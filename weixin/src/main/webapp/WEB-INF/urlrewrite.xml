@@ -82,4 +82,15 @@
         <from>^/weixin/list\.htm\?tagid=(.*)&amp;nextId=(.*)&amp;prevId=(.*)</from>
         <to last="true">/weixin/list-$1-$2-$3.htm</to>
     </outbound-rule>
+    
+    <!-- 热门微信文章 -->
+    <rule>
+        <note>首页，标签文章列表页</note>
+        <from>^/weixin/hot-(.*)?-(.*)?\.htm$</from>
+        <to type="forward">/weixin/hot.htm?tagid=$1&amp;nextId=$2</to>
+    </rule>
+    <outbound-rule>
+        <from>^/weixin/hot\.htm\?tagid=(.*)&amp;nextId=(.*)</from>
+        <to last="true">/weixin/hot-$1-$2.htm</to>
+    </outbound-rule>
 </urlrewrite>
